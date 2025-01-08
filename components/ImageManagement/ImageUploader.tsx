@@ -1,15 +1,12 @@
 "use client"
-import Image from 'next/image';
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 interface ImageUploaderProps {
-  onImageUpload?: (file: string) => void;
+  onImageUpload: (file: string) => void;
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload }) => {
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
@@ -24,15 +21,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload }) => {
         }
         const reader = new FileReader();
         reader.onload = () => {
-          setUploadedImage(reader.result as string);
-          if (onImageUpload) {
-            onImageUpload(reader.result as string);
-          }
+          onImageUpload(reader.result as string);
         };
         reader.readAsDataURL(file);
       }
     },
-    []
+    [onImageUpload]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

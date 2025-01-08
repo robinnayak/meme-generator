@@ -2,6 +2,16 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
 
+interface MemeApiResponse {
+    id: string;
+    name: string;
+    url: string;
+}
+
+interface MemeApiData {
+    memes: MemeApiResponse[];
+}
+
 type Template = {
     id: number;
     name: string;
@@ -20,9 +30,9 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
     useEffect(() => {
         const fetchMemes = async () => {
             try {
-                const response = await axios.get('https://api.imgflip.com/get_memes');
+                const response = await axios.get<{ success: boolean; data: MemeApiData }>('https://api.imgflip.com/get_memes');
                 if (response.data.success) {
-                    const memeTemplates = response.data.data.memes.map((meme: any) => ({
+                    const memeTemplates = response.data.data.memes.map((meme) => ({
                         id: parseInt(meme.id),
                         name: meme.name,
                         thumbnail: meme.url

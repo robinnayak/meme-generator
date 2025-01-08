@@ -61,7 +61,7 @@ export default function About() {
         />
         <div className="prose max-w-none">
           <p className="text-lg mb-4">
-            Welcome to our Meme Generator - a powerful and intuitive tool designed to bring your creative ideas to life! Our platform allows you to easily create, customize, and share memes that stand out from the crowd.
+            Welcome to our Meme Generator &mdash; a powerful and intuitive tool designed to bring your creative ideas to life! Our platform allows you to easily create, customize, and share memes that stand out from the crowd.
           </p>
           
           <h2 className="text-2xl font-semibold mt-6 mb-4">What Makes Us Special</h2>
@@ -75,7 +75,7 @@ export default function About() {
 
           <h2 className="text-2xl font-semibold mt-6 mb-4">Our Mission</h2>
           <p className="text-lg mb-4">
-            Our mission is to provide a seamless and enjoyable meme creation experience for everyone, whether you're a meme enthusiast or creating your very first meme. We believe in making creativity accessible and fun!
+            Our mission is to provide a seamless and enjoyable meme creation experience for everyone, whether you&apos;re a meme enthusiast or creating your very first meme. We believe in making creativity accessible and fun!
           </p>
 
           <h2 className="text-2xl font-semibold mt-6 mb-4">Get Started</h2>

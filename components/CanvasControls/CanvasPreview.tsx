@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import html2canvas from 'html2canvas';
 
 type TextBox = {
@@ -29,7 +29,6 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dragRef = useRef<{ id: string; offsetX: number; offsetY: number } | null>(null);
-  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDownload = async () => {
@@ -74,7 +73,11 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
 
     const clickedText = textBoxes.find((box) => isPointInTextBox(x, y, box, ctx));
     if (clickedText) {
-      onTextEdit(clickedText.id);
+      if (e.altKey) {
+        onTextDelete(clickedText.id);
+      } else {
+        onTextEdit(clickedText.id);
+      }
     }
   };
 
@@ -122,13 +125,31 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     setIsDragging(false);
   };
 
-  const drawTextBoxes = (ctx: CanvasRenderingContext2D) => {
-    textBoxes.forEach((box) => {
-      ctx.font = `${box.italic ? 'italic ' : ''}${box.bold ? 'bold ' : ''}${box.fontSize}px Arial`;
-      ctx.fillStyle = box.color;
-      ctx.fillText(box.text, box.x, box.y);
-    });
-  };
+  const drawTextBoxes = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !imageUrl) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw image
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = imageUrl;
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      
+      // Draw text boxes
+      textBoxes.forEach((box) => {
+        ctx.font = `${box.italic ? 'italic ' : ''}${box.bold ? 'bold ' : ''}${box.fontSize}px sans-serif`;
+        ctx.fillStyle = box.color;
+        ctx.fillText(box.text, box.x, box.y);
+      });
+    };
+  }, [imageUrl, textBoxes]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -158,16 +179,12 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
 
       canvas.width = width;
       canvas.height = height;
-      setCanvasSize({ width, height });
 
-      // Clear canvas and draw image
-      ctx.clearRect(0, 0, width, height);
-      ctx.drawImage(img, 0, 0, width, height);
-      drawTextBoxes(ctx);
+      drawTextBoxes();
     };
 
     img.src = imageUrl;
-  }, [imageUrl, textBoxes]);
+  }, [imageUrl, textBoxes, drawTextBoxes]);
 
   return (
     <div className="flex flex-col items-center space-y-4">

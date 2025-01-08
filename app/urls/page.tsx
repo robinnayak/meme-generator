@@ -1,19 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 export default function URLManager() {
   const [url, setUrl] = useState('');
   const [urls, setUrls] = useState<string[]>([]);
   const [error, setError] = useState('');
-  const router = useRouter();
 
   const isValidUrl = (urlString: string) => {
     try {
-      new URL(urlString);
-      return true;
-    } catch (e) {
+      return Boolean(new URL(urlString));
+    } catch {
       return false;
     }
   };
