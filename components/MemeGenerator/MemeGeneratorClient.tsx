@@ -25,7 +25,7 @@ type Template = {
   thumbnail: string;
 };
 
-export default function MemeGeneratorClient() {
+export default function MemeGeneratorClient( ) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [textBoxes, setTextBoxes] = useState<TextBox[]>([]);
   const [editingText, setEditingText] = useState<TextBox | null>(null);

@@ -15,8 +15,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Meme Generator",
-  description: "Create and customize memes easily",
+  title: {
+    template: "%s | Meme Generator",
+    default: "Meme Generator - Create Custom Memes Online - Robin Nayak",
+  },
+  description:
+    "Create and customize memes easily with our free online meme generator. Choose from popular templates or upload your own images.",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
+  keywords: [
+    'meme generator',
+    'meme maker',
+    'custom memes',
+    'online meme creator',
+  ],
+  authors: [{ name: 'Meme Generator Robin Nayak' }]
 };
 
 export default function RootLayout({

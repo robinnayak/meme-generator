@@ -1,12 +1,8 @@
-"use client";
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
-import Image, { StaticImageData } from 'next/image';
-import Header from '@/components/global/Header';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import MemeGuideCover from '@/public/assets/meme-guide-cover.jpg';
-import MemeAnalysisCover from '@/public/assets/meme-guide-cover1.jpg';
+import type { Metadata } from 'next';
+import BlogPostClient from './BlogPostClient';
+import { StaticImageData } from 'next/image';
+import { BASE_URL } from '@/components/services/baseurl';
+
 // This would typically come from your CMS or API
 interface BlogPost {
   title: string;
@@ -20,10 +16,12 @@ interface BlogPosts {
   [key: string]: BlogPost;
 }
 
-const blogPosts: BlogPosts = {
+// Sample blog posts data - In production, this would come from a CMS or API
+export const blogPosts: BlogPosts = {
   'meme-creation-guide': {
     title: 'The Ultimate Guide to Creating Viral Memes',
     date: '2025-01-08',
+    author: 'Robin Nayak',
     content: `
       # The Ultimate Guide to Creating Viral Memes
 
@@ -40,12 +38,12 @@ const blogPosts: BlogPosts = {
 
       [... rest of the content ...]
     `,
-    author: 'Robin Nayak',
-    coverImage: MemeGuideCover,
+    coverImage: '/assets/meme-guide-cover.jpg',
   },
   'meme-analysis': {
     title: 'Meme Analysis: What Makes a Meme Go Viral?',
     date: '2025-01-15',
+    author: 'Robin Nayak',
     content: `
       # Meme Analysis: What Makes a Meme Go Viral?
 
@@ -67,86 +65,105 @@ const blogPosts: BlogPosts = {
 
       Remember, viral success often comes when you least expect it. Focus on creating quality content that resonates with your audience rather than chasing virality.
     `,
-    author: 'Robin Nayak',
-    coverImage: MemeAnalysisCover,
+    coverImage: '/assets/meme-guide-cover1.jpg',
   }
 };
 
-const BlogPost = () => {
-  const params = useParams();
-  const slug = params.slug as string;
-  const post = blogPosts[slug];
+interface Props {
+  params: { slug: string }
+}
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const post = blogPosts[params.slug];
+  
   if (!post) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-800 mb-4">Post Not Found</h1>
-            <Link
-              href="/blog"
-              className="text-blue-600 hover:text-blue-700 flex items-center justify-center gap-2"
-            >
-              <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
-              Back to Blog
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
+    return {
+      title: 'Post Not Found',
+      description: 'The requested blog post could not be found.',
+    };
   }
+
+  return {
+    title: `${post.title} | Meme Generator Blog`,
+    description: post.content.substring(0, 155) + '...',
+    alternates: {
+      canonical: `${BASE_URL}/blog/${params.slug}`,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.content.substring(0, 155) + '...',
+      type: 'article',
+      publishedTime: post.date,
+      authors: [post.author],
+      images: [
+        {
+          url: typeof post.coverImage === 'string' ? post.coverImage : post.coverImage.src,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        }
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.content.substring(0, 155) + '...',
+      images: [{
+        url: typeof post.coverImage === 'string' ? post.coverImage : post.coverImage.src,
+        width: 1200,
+        height: 630,
+        alt: post.title
+      }],
+    },
+  };
+}
+
+export default function BlogPost({ params }: Props) {
+  const post = blogPosts[params.slug];
+  
+  if (!post) {
+    return <div>Post not found</div>;
+  }
+
+  // Create article structured data
+  const articleStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      '@type': 'Person',
+      name: post.author,
+    },
+    image: {
+      '@type': 'ImageObject',
+      url: typeof post.coverImage === 'string' ? post.coverImage : post.coverImage.src,
+      width: 1200,
+      height: 630,
+      alt: post.title
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Meme Generator',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${BASE_URL}/meme-logo.png`
+      }
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${BASE_URL}/blog/${params.slug}`
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Back Button */}
-        <div className="mb-8">
-          <Link
-            href="/blog"
-            className="text-gray-600 hover:text-gray-900 transition-colors inline-flex items-center gap-2"
-          >
-            <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
-            Back to Blog
-          </Link>
-        </div>
-
-        {/* Header */}
-        <Header heading={post.title} subheading={`By ${post.author} • ${new Date(post.date).toLocaleDateString()}`} />
-
-        {/* Cover Image */}
-        <div className="relative h-[400px] w-full mt-8 rounded-xl overflow-hidden shadow-sm">
-          <Image
-            src={post.coverImage}
-            alt={post.title}
-            fill
-            className="object-cover"
-          />
-        </div>
-
-        {/* Content */}
-        <article className="mt-12 bg-white rounded-xl shadow-sm p-8">
-          <div className="prose prose-lg max-w-none">
-            {post.content.split('\n').map((paragraph, index) => (
-              <p key={index} className="mb-4">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-        </article>
-
-        {/* Footer */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/blog"
-            className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium gap-2"
-          >
-            <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
-            Back to All Posts
-          </Link>
-        </div>
-      </div>
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }}
+      />
+      <BlogPostClient post={post} />
+    </>
   );
-};
-
-export default BlogPost;
+}
