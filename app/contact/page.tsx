@@ -4,13 +4,13 @@ import { BASE_URL } from '@/components/services/baseurl';
 
 export const metadata: Metadata = {
   title: 'Contact Us - Get in Touch with Meme Generator Team',
-  description: 'Contact Robin Nayak and the Meme Generator team. Get support, share feedback, or collaborate with us. We\'re here to help you create the perfect memes.',
+  description: 'Contact Robin Nayak and the Meme Generator team. Get support, share feedback, or collaborate with us. We&apos;re here to help you create the perfect memes.',
   alternates: {
     canonical: `${BASE_URL}/contact`,
   },
   openGraph: {
     title: 'Contact Meme Generator Team',
-    description: 'Get in touch with the Meme Generator team. We\'re here to help!',
+    description: 'Get in touch with the Meme Generator team. We&apos;re here to help!',
     url: `${BASE_URL}/contact`,
     images: [
       {
@@ -55,7 +55,7 @@ export default function Contact() {
             <h2 className="text-2xl font-semibold mb-6 underline">Robin Nayak</h2>
             <p className="text-gray-700 mb-6">
               Meet Robin Nayak, a developer with a knack for turning data into laughs.
-              With a creative twist, he's crafted a meme generator that brings humor to life,
+              With a creative twist, he&apos;s crafted a meme generator that brings humor to life,
               proving that coding and fun go hand in hand!
             </p>
 

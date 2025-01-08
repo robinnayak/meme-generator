@@ -1,14 +1,14 @@
 import { MetadataRoute } from 'next'
 import { BASE_URL } from '@/components/services/baseurl'
-import { blogPosts } from './blog/[slug]/page'
+// import { blogPosts } from './blog/data'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const blogRoutes = Object.keys(blogPosts).map((slug) => ({
-        url: `${BASE_URL}/blog/${slug}`,
-        lastModified: new Date().toISOString(),
-        changeFrequency: 'weekly' as const,
-        priority: 0.8,
-    }))
+    // const blogRoutes = Object.keys(blogPosts).map((slug) => ({
+    //     url: `${BASE_URL}/blog/${slug}`,
+    //     lastModified: new Date().toISOString(),
+    //     changeFrequency: 'weekly' as const,
+    //     priority: 0.8,
+    // }))
 
     const routes = [
         {
@@ -43,5 +43,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }
     ]
 
-    return [...routes, ...blogRoutes]
+    return [...routes]
 }

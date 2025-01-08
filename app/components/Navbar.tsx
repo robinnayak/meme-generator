@@ -54,9 +54,9 @@ const Navbar = () => {
                             <Link href="/custommeme" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
                                 Custom Meme
                             </Link>
-                            <Link href="/blog" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            {/* <Link href="/blog" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
                                 Blog
-                            </Link>
+                            </Link> */}
                             <Link href="/about" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
                                 About
                             </Link>
