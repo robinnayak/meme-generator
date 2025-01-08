@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 type TextBox = {
@@ -14,42 +14,76 @@ type TextBox = {
 
 interface TextEditorProps {
   onAddText: (textBox: TextBox) => void;
+  editingText: TextBox | null;
+  onUpdateText: (updatedText: TextBox) => void;
+  onDeleteText: (id: string) => void;
 }
 
-const TextEditor: React.FC<TextEditorProps> = ({ onAddText }) => {
+const TextEditor: React.FC<TextEditorProps> = ({ onAddText, editingText, onUpdateText, onDeleteText }) => {
   const [text, setText] = useState('');
   const [fontSize, setFontSize] = useState(24);
   const [color, setColor] = useState('#000000');
   const [bold, setBold] = useState(false);
   const [italic, setItalic] = useState(false);
 
+  useEffect(() => {
+    if (editingText) {
+      setText(editingText.text);
+      setFontSize(editingText.fontSize);
+      setColor(editingText.color);
+      setBold(editingText.bold);
+      setItalic(editingText.italic);
+    }
+  }, [editingText]);
+
   const handleAddText = () => {
     if (!text.trim()) return;
 
-    const newTextBox: TextBox = {
-      id: uuidv4(),
-      text,
-      x: 50, // Default position
-      y: 50,
-      fontSize,
-      color,
-      bold,
-      italic,
-    };
+    if (editingText) {
+      // Update existing text
+      onUpdateText({
+        ...editingText,
+        text,
+        fontSize,
+        color,
+        bold,
+        italic,
+      });
+    } else {
+      // Add new text
+      const newTextBox: TextBox = {
+        id: uuidv4(),
+        text,
+        x: 50, // Default position
+        y: 50,
+        fontSize,
+        color,
+        bold,
+        italic,
+      };
+      onAddText(newTextBox);
+    }
 
-    onAddText(newTextBox);
+    // Clear form
     setText('');
-  };
 
+  };
+  const handleDelete = () => {
+    if (editingText && onDeleteText) {
+      onDeleteText(editingText.id);
+      // Clear form after deletion
+      setText('');
+    }
+  };
   return (
     <div className="space-y-4">
       <div className="flex flex-col space-y-2">
-        <input
-          type="text"
+        <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Enter text"
-          className="p-2 border rounded"
+          placeholder="Enter your text here..."
+          className="w-full p-2 border rounded-lg"
+          rows={3}
         />
         <div className="flex space-x-4">
           <input
@@ -68,28 +102,35 @@ const TextEditor: React.FC<TextEditorProps> = ({ onAddText }) => {
           />
           <button
             onClick={() => setBold(!bold)}
-            className={`px-4 py-2 border rounded ${
-              bold ? 'bg-blue-500 text-white' : 'bg-white'
-            }`}
+            className={`px-4 py-2 border rounded ${bold ? 'bg-blue-500 text-white' : 'bg-white'
+              }`}
           >
             B
           </button>
           <button
             onClick={() => setItalic(!italic)}
-            className={`px-4 py-2 border rounded ${
-              italic ? 'bg-blue-500 text-white' : 'bg-white'
-            }`}
+            className={`px-4 py-2 border rounded ${italic ? 'bg-blue-500 text-white' : 'bg-white'
+              }`}
           >
             I
           </button>
         </div>
       </div>
+
       <button
         onClick={handleAddText}
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
       >
-        Add Text
+        {editingText ? 'Update Text' : 'Add Text'}
       </button>
+      {editingText && (
+        <button
+          onClick={handleDelete}
+          className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+        >
+          Delete Text
+        </button>
+      )}
     </div>
   );
 };

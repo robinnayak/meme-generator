@@ -15,12 +15,16 @@ interface CanvasPreviewProps {
   imageUrl: string | null;
   textBoxes: TextBox[];
   onUpdateTextPosition: (id: string, x: number, y: number) => void;
+  onTextEdit: (id: string) => void;
+  onTextDelete: (id: string) => void;
 }
 
 const CanvasPreview: React.FC<CanvasPreviewProps> = ({
   imageUrl,
   textBoxes,
   onUpdateTextPosition,
+  onTextEdit,
+  onTextDelete,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dragRef = useRef<{ id: string; offsetX: number; offsetY: number } | null>(null);
@@ -36,6 +40,47 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
       link.click();
     }
   };
+
+  const handleDoubleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Find clicked text box
+    const clickedText = textBoxes.find((box) => isPointInTextBox(x, y, box, ctx));
+
+    if (clickedText) {
+      onTextEdit(clickedText.id);
+    }
+  };
+
+  // const handleKeyDown = (e: KeyboardEvent) => {
+  //   if (e.key === 'Delete' || e.key === 'Backspace') {
+  //     const canvas = canvasRef.current;
+  //     if (!canvas) return;
+
+  //     const ctx = canvas.getContext('2d');
+  //     if (!ctx) return;
+
+  //     // Find if mouse is over any text box
+  //     const rect = canvas.getBoundingClientRect();
+  //     const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+  //     const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+  //     const textToDelete = textBoxes.find((box) => isPointInTextBox(mouseX, mouseY, box, ctx));
+      
+  //     if (textToDelete) {
+  //       onTextDelete(textToDelete.id);
+  //     }
+  //   }
+  // };
+
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -224,6 +269,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
+        onDoubleClick={handleDoubleClick}
       />
       <div className="absolute top-2 right-2">
         <button

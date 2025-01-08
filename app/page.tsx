@@ -28,7 +28,11 @@ const Home: React.FC = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [undoStack, setUndoStack] = useState<TextBox[][]>([]);
   const [redoStack, setRedoStack] = useState<TextBox[][]>([]);
+  const [editingText, setEditingText] = useState<TextBox | null>(null);
+
+  
   const handleAddTextBox = (textBox: TextBox) => {
+
     setUndoStack(prev => [...prev, textBoxes]);
     setRedoStack([]);  // Clear redo stack on new action
     setTextBoxes(prev => [...prev, textBox]);
@@ -66,12 +70,36 @@ const Home: React.FC = () => {
     );
   };
 
+  const handleTextEdit = (id: string) => {
+    const textBox = textBoxes.find(box => box.id === id);
+    if (textBox) {
+      setEditingText(textBox);
+    }
+  };
+
+  const handleTextUpdate = (updatedText: TextBox) => {
+    setUndoStack(prev => [...prev, textBoxes]);
+    setRedoStack([]);
+    setTextBoxes(prev =>
+      prev.map((textBox) =>
+        textBox.id === updatedText.id ? updatedText : textBox
+      )
+    );
+    setEditingText(null);
+  };
+
+  const handleTextDelete = (id: string) => {
+    setUndoStack(prev => [...prev, textBoxes]);
+    setRedoStack([]);
+    setTextBoxes(prev => prev.filter(textBox => textBox.id !== id));
+    setEditingText(null); // Clear editing state after deletion
+  };
+
   const handleSelectTemplate = (template: Template) => {
     setSelectedImage(template.thumbnail);
   };
 
   const handleImageUpload = (imageUrl: string) => {
-    console.log('Image uploaded:', imageUrl);
     setSelectedImage(imageUrl);
   };
 
@@ -94,11 +122,18 @@ const Home: React.FC = () => {
               imageUrl={selectedImage}
               textBoxes={textBoxes}
               onUpdateTextPosition={handleUpdateTextPosition}
+              onTextEdit={handleTextEdit}
+              onTextDelete={handleTextDelete}
             />
           </section>
           <section>
             <h2 className="text-xl font-semibold mb-4">Add Text</h2>
-            <TextEditor onAddText={handleAddTextBox} />
+            <TextEditor 
+              onAddText={handleAddTextBox} 
+              editingText={editingText}
+              onUpdateText={handleTextUpdate}
+              onDeleteText={handleTextDelete}
+            />
           </section>
         </>
       )}
