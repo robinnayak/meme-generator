@@ -97,26 +97,29 @@ const CustomMeme = () => {
         <div className="max-w-6xl mx-auto px-4 space-y-8">
           {/* Header */}
           <div className="flex items-center justify-between">
-            <Link
-              href="/"
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
-              <span>Back to Templates</span>
-            </Link>
+            <nav aria-label="breadcrumb" className="mb-4">
+
+              <Link
+                href="/"
+                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
+                <span>Back to Templates</span>
+              </Link>
+            </nav>
           </div>
-          <Header heading="Create Custom Meme" subheading="Customize Your Meme" />
+          <Header heading="Custom Meme Creator" subheading="Upload, customize, and create your perfect memes" />
           {/* Main Content */}
           <div className="grid md:grid-cols-2 gap-8">
             {/* Left Column - Upload and Preview */}
             <div className="space-y-6">
               {!selectedImage ? (
-                <div className="bg-white rounded-lg shadow-sm p-6">
+                <section aria-label="Image Upload Section" className="bg-white rounded-lg shadow-sm p-6">
                   <h2 className="text-xl font-semibold mb-4 text-gray-800">Upload Image</h2>
                   <ImageUploader onImageUpload={handleImageUpload} />
-                </div>
+                </section>
               ) : (
-                <div className="bg-white rounded-lg shadow-sm p-6">
+                <section aria-label="Image Preview Section" className="bg-white rounded-lg shadow-sm p-6">
                   <h2 className="text-xl font-semibold mb-4 text-gray-800">Preview</h2>
                   <CanvasPreview
                     imageUrl={selectedImage}
@@ -125,7 +128,7 @@ const CustomMeme = () => {
                     onTextEdit={handleTextEdit}
                     onTextDelete={handleTextDelete}
                   />
-                </div>
+                </section>
               )}
             </div>
 
