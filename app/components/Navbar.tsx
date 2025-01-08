@@ -4,7 +4,7 @@ import Image from 'next/image';
 import MemeLogo from '../../public/assets/meme-logo.png';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faCross, faX } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faX } from '@fortawesome/free-solid-svg-icons';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -54,11 +54,11 @@ const Navbar = () => {
                             <Link href="/custommeme" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
                                 Custom Meme
                             </Link>
-                            <Link href="/about" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
-                                About
-                            </Link>
                             <Link href="/blog" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
                                 Blog
+                            </Link>
+                            <Link href="/about" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                                About
                             </Link>
                             <Link href="/contact" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
                                 Contact
@@ -77,36 +77,36 @@ const Navbar = () => {
             {/* Mobile menu */}
             <div className={`${isOpen ? 'block' : 'hidden'} md:hidden absolute w-full bg-white z-50 shadow-lg`}>
                 <div className="px-2 pt-2 pb-3 space-y-1">
-                    <Link 
-                        href="/about" 
+                    <Link
+                        href="/about"
                         className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                         onClick={() => setIsOpen(false)}
                     >
                         About
                     </Link>
-                    <Link 
-                        href="/blog" 
+                    <Link
+                        href="/blog"
                         className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                         onClick={() => setIsOpen(false)}
                     >
                         Blog
                     </Link>
-                    <Link 
-                        href="/contact" 
+                    <Link
+                        href="/contact"
                         className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                         onClick={() => setIsOpen(false)}
                     >
                         Contact
                     </Link>
-                    <Link 
-                        href="/faq" 
+                    <Link
+                        href="/faq"
                         className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                         onClick={() => setIsOpen(false)}
                     >
                         FAQ
                     </Link>
-                    <Link 
-                        href="/privacy" 
+                    <Link
+                        href="/privacy"
                         className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                         onClick={() => setIsOpen(false)}
                     >
