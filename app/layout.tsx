@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { BASE_URL } from "@/components/services/baseurl";
+import AdBanner from "@/components/Ads/AdBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -71,11 +72,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR-AD-CLIENT-ID"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} font-sans min-h-screen flex flex-col`}
       >
         <Navbar />
-        <main className="flex-grow">{children}</main>
+        <main className="flex-grow pb-16">
+          {children}
+        </main>
+        <div className="fixed bottom-0 left-0 right-0 z-50">
+          <AdBanner type="social" />
+        </div>
         <Footer />
       </body>
     </html>

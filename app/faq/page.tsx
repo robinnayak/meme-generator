@@ -1,91 +1,81 @@
 import type { Metadata } from 'next';
 import Header from "@/components/global/Header";
+import AdBanner from "@/components/Ads/AdBanner";
 import { BASE_URL } from '@/components/services/baseurl';
 
 export const metadata: Metadata = {
-  title: 'Frequently Asked Questions - Meme Generator Help & Support',
-  description: 'Get answers to common questions about using our meme generator. Learn how to create memes, add text, customize fonts, and more. Step-by-step guides and helpful tips.',
-  alternates: {
-    canonical: `${BASE_URL}/faq`,
-  },
+  title: 'FAQ - Frequently Asked Questions',
+  description: 'Find answers to commonly asked questions about our Meme Generator tool.',
   openGraph: {
-    title: 'Meme Generator FAQ - Help & Support',
-    description: 'Get answers to common questions about using our meme generator. Step-by-step guides included.',
+    title: 'FAQ - Meme Generator Help',
+    description: 'Find answers to commonly asked questions about our Meme Generator tool.',
     url: `${BASE_URL}/faq`,
-    images: [
-      {
-        url: '/faq-og.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Meme Generator FAQ Page',
-      }
-    ],
   },
 };
 
 export default function FAQ() {
-    const faqs = [
-        {
-            question: "How do I create a meme?",
-            answer: "Creating a meme is simple! Just follow these steps:\n1. Upload your image or choose from available templates\n2. Click 'Add Text' to add text boxes\n3. Type your text and customize its position\n4. Adjust font settings as needed\n5. Click 'Download' to save your meme"
-        },
-        {
-            question: "Can I add multiple text boxes?",
-            answer: "Yes! You can add as many text boxes as you need. Simply click the 'Add Text' button for each new text box you want to add. Each text box can be positioned and styled independently."
-        },
-        {
-            question: "How do I edit existing text?",
-            answer: "To edit existing text:\n1. Click on the text box you want to edit in the preview area\n2. The text editor panel will show the current text content\n3. Make your changes in the text input field\n4. The changes will appear in real-time in the preview\n5. You can also adjust the font settings while editing"
-        },
-        {
-            question: "How do I delete text from my meme?",
-            answer: "There are two ways to delete text:\n1. Using the delete button:\n   - Click on the text you want to remove\n   - Click the delete (trash) icon next to the text in the editor panel\n2. Using keyboard:\n   - Select the text box you want to remove\n   - Press the Delete or Backspace key on your keyboard"
-        },
-        {
-            question: "How do I customize text position?",
-            answer: "You can drag and drop text boxes anywhere on the image. Click and hold on a text box, then move it to your desired position. The changes will be reflected in real-time in the preview."
-        },
-        {
-            question: "What font options are available?",
-            answer: "You can customize various font properties including:\n- Font size\n- Font color\n- Text alignment\n- Bold and italic styles"
-        },
-        {
-            question: "How do I download my meme?",
-            answer: "Once you're happy with your meme, simply click the 'Download' button. Your meme will be saved as a high-quality image file to your device."
-        }
-    ];
+  const faqs = [
+    {
+      question: "How do I create a meme?",
+      answer: "Creating a meme is easy! Simply choose a template from our collection, add your text, customize the styling, and download your meme. You can also upload your own image to create a custom meme."
+    },
+    {
+      question: "Can I use my own images?",
+      answer: "Yes! You can upload your own images to create custom memes. Click the 'Upload' button to use your own image as a template."
+    },
+    {
+      question: "Is it free to use?",
+      answer: "Yes, our meme generator is completely free to use. You can create and download as many memes as you want without any cost."
+    },
+    {
+      question: "What image formats are supported?",
+      answer: "We support common image formats including JPG, PNG, and WEBP. Your downloaded memes will be in high-quality PNG format."
+    }
+  ];
 
-    // Create FAQ structured data
-    const faqStructuredData = {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        mainEntity: faqs.map(faq => ({
-            '@type': 'Question',
-            name: faq.question,
-            acceptedAnswer: {
-                '@type': 'Answer',
-                text: faq.answer
-            }
-        }))
-    };
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <Header
+        heading="Frequently Asked Questions"
+        subheading="Find answers to common questions about our Meme Generator"
+      />
 
-    return (
-        <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
-            />
-            <div className="max-w-4xl mx-auto px-4 py-8">
-                <Header heading="Frequently Asked Questions" subheading="Find answers to common questions about using our Meme Generator" />
-                <div className="space-y-6">
-                    {faqs.map((faq, index) => (
-                        <div key={index} className="bg-white rounded-lg shadow-sm p-6">
-                            <h2 className="text-xl font-semibold text-gray-800 mb-3">{faq.question}</h2>
-                            <p className="text-gray-600 whitespace-pre-line">{faq.answer}</p>
-                        </div>
-                    ))}
-                </div>
+      {/* Native ad after header */}
+      <div className="my-8 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
+        <AdBanner type="native" style={{ margin: '0 auto' }} />
+      </div>
+
+      <div className="space-y-8">
+        {faqs.map((faq, index) => (
+          <>
+            <div key={index} className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+              <h3 className="text-xl font-semibold mb-3">{faq.question}</h3>
+              <p className="text-gray-600">{faq.answer}</p>
             </div>
-        </>
-    );
+
+            {/* Add direct link after every 2 FAQs */}
+            {(index + 1) % 2 === 0 && (
+              <div className="text-center py-4">
+                <AdBanner type="direct" style={{
+                  display: 'inline-block',
+                  padding: '0.75rem 1.5rem',
+                  backgroundColor: '#f8fafc',
+                  borderRadius: '0.5rem',
+                  border: '1px solid #e2e8f0',
+                  fontWeight: 500,
+                  transition: 'all 0.2s',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                }} />
+              </div>
+            )}
+          </>
+        ))}
+      </div>
+
+      {/* Native ad at bottom */}
+      <div className="mt-12 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
+        <AdBanner type="native" style={{ margin: '0 auto' }} />
+      </div>
+    </div>
+  );
 }

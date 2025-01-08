@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import AdBanner from '../Ads/AdBanner';
 
 type TextBox = {
   id: string;
@@ -117,11 +118,16 @@ const TextEditor: React.FC<TextEditorProps> = ({ onAddText, editingText, onUpdat
       </div>
 
       <button
-        onClick={handleAddText}
-        className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+        onClick={editingText ? handleAddText : handleAddText}
+        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mr-2"
       >
         {editingText ? 'Update Text' : 'Add Text'}
       </button>
+
+      <div className="my-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
+        <AdBanner type="native" style={{ margin: '1rem auto' }} />
+      </div>
+
       {editingText && (
         <button
           onClick={handleDelete}
