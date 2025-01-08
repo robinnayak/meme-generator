@@ -63,7 +63,6 @@ const TextEditor: React.FC<TextEditorProps> = ({ onAddText, editingText, onUpdat
       };
       onAddText(newTextBox);
     }
-
     // Clear form
     setText('');
 

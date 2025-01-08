@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import html2canvas from 'html2canvas';
+
 type TextBox = {
   id: string;
   text: string;
@@ -33,12 +34,31 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
 
   const handleDownload = async () => {
     if (canvasRef.current) {
-      const canvas = await html2canvas(canvasRef.current, { useCORS: true });
-      const link = document.createElement('a');
-      link.download = 'meme.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+      try {
+        const canvas = await html2canvas(canvasRef.current, { 
+          useCORS: true,
+          backgroundColor: null 
+        });
+        const link = document.createElement('a');
+        link.download = 'meme.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      } catch (error) {
+        console.error('Error downloading image:', error);
+      }
     }
+  };
+
+  const isPointInTextBox = (x: number, y: number, box: TextBox, ctx: CanvasRenderingContext2D) => {
+    ctx.font = `${box.italic ? 'italic ' : ''}${box.bold ? 'bold ' : ''}${box.fontSize}px Arial`;
+    const metrics = ctx.measureText(box.text);
+    const height = box.fontSize;
+    return (
+      x >= box.x &&
+      x <= box.x + metrics.width &&
+      y >= box.y - height &&
+      y <= box.y
+    );
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -52,151 +72,10 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Find clicked text box
     const clickedText = textBoxes.find((box) => isPointInTextBox(x, y, box, ctx));
-
     if (clickedText) {
       onTextEdit(clickedText.id);
     }
-  };
-
-  // const handleKeyDown = (e: KeyboardEvent) => {
-  //   if (e.key === 'Delete' || e.key === 'Backspace') {
-  //     const canvas = canvasRef.current;
-  //     if (!canvas) return;
-
-  //     const ctx = canvas.getContext('2d');
-  //     if (!ctx) return;
-
-  //     // Find if mouse is over any text box
-  //     const rect = canvas.getBoundingClientRect();
-  //     const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
-  //     const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
-
-  //     const textToDelete = textBoxes.find((box) => isPointInTextBox(mouseX, mouseY, box, ctx));
-      
-  //     if (textToDelete) {
-  //       onTextDelete(textToDelete.id);
-  //     }
-  //   }
-  // };
-
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || !imageUrl) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    
-    img.onload = () => {
-      // Set canvas size based on image dimensions
-      const maxWidth = 800;
-      const maxHeight = 600;
-      let width = img.width;
-      let height = img.height;
-
-      // Scale down if image is too large
-      if (width > maxWidth) {
-        height = (height * maxWidth) / width;
-        width = maxWidth;
-      }
-      if (height > maxHeight) {
-        width = (width * maxHeight) / height;
-        height = maxHeight;
-      }
-
-      canvas.width = width;
-      canvas.height = height;
-      setCanvasSize({ width, height });
-
-      // Draw image and text
-      ctx.drawImage(img, 0, 0, width, height);
-      drawTextBoxes();
-    };
-
-    // Handle both data URLs and regular URLs
-    if (imageUrl.startsWith('data:')) {
-      img.src = imageUrl;
-    } else if (imageUrl.startsWith('http')) {
-      // For absolute URLs (like https://i.imgflip.com/...)
-      img.src = imageUrl;
-    } else {
-      // For relative URLs (like /assets/meme1.jpg)
-      img.src = window.location.origin + imageUrl;
-    }
-  }, [imageUrl]);
-
-  useEffect(() => {
-    if (imageUrl) {
-      drawTextBoxes();
-    }
-  }, [imageUrl]);
-
-  const drawTextBoxes = () => {
-    const canvas = canvasRef.current;
-    if (!canvas || !imageUrl) return;
-    
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Clear canvas and redraw image
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    
-    img.onload = () => {
-      // Draw the image
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      
-      // Draw text boxes
-      textBoxes.forEach((box) => {
-        ctx.font = `${box.bold ? 'bold ' : ''}${box.italic ? 'italic ' : ''}${
-          box.fontSize
-        }px Arial`;
-        ctx.fillStyle = box.color;
-        ctx.fillText(box.text, box.x, box.y);
-      });
-    };
-
-    img.onerror = (error) => {
-      console.error('Error loading image:', error);
-      // Draw a placeholder or error message
-      ctx.fillStyle = '#f0f0f0';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#666';
-      ctx.font = '16px Arial';
-      ctx.fillText('Error loading image', canvas.width/2 - 50, canvas.height/2);
-    };
-
-    // Set the image source
-    if (imageUrl.startsWith('data:')) {
-      img.src = imageUrl;
-    } else if (imageUrl.startsWith('http')) {
-      img.src = imageUrl;
-    } else {
-      img.src = window.location.origin + imageUrl;
-    }
-  };
-
-  useEffect(() => {
-    drawTextBoxes();
-  }, [textBoxes]);
-
-  const isPointInTextBox = (x: number, y: number, box: TextBox, ctx: CanvasRenderingContext2D) => {
-    ctx.font = `${box.bold ? 'bold ' : ''}${box.italic ? 'italic ' : ''}${box.fontSize}px Arial`;
-    const metrics = ctx.measureText(box.text);
-    const padding = 10; // Add some padding for easier selection
-    
-    return (
-      x >= box.x - padding &&
-      x <= box.x + metrics.width + padding &&
-      y >= box.y - box.fontSize - padding &&
-      y <= box.y + padding
-    );
   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -210,21 +89,19 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Find clicked text box
     const clickedText = textBoxes.find((box) => isPointInTextBox(x, y, box, ctx));
-
     if (clickedText) {
-      setIsDragging(true);
       dragRef.current = {
         id: clickedText.id,
         offsetX: x - clickedText.x,
         offsetY: y - clickedText.y,
       };
+      setIsDragging(true);
     }
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!dragRef.current || !isDragging) return;
+    if (!isDragging || !dragRef.current) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -233,25 +110,11 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     const x = (e.clientX - rect.left) * (canvas.width / rect.width);
     const y = (e.clientY - rect.top) * (canvas.height / rect.height);
 
-    // Calculate new position
-    let newX = x - dragRef.current.offsetX;
-    let newY = y - dragRef.current.offsetY;
-
-    // Get text metrics for bounds checking
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const textBox = textBoxes.find(box => box.id === dragRef.current?.id);
-    if (!textBox) return;
-
-    ctx.font = `${textBox.bold ? 'bold ' : ''}${textBox.italic ? 'italic ' : ''}${textBox.fontSize}px Arial`;
-    const metrics = ctx.measureText(textBox.text);
-
-    // Bounds checking
-    newX = Math.max(0, Math.min(newX, canvas.width - metrics.width));
-    newY = Math.max(textBox.fontSize, Math.min(newY, canvas.height));
-
-    onUpdateTextPosition(dragRef.current.id, newX, newY);
+    onUpdateTextPosition(
+      dragRef.current.id,
+      x - dragRef.current.offsetX,
+      y - dragRef.current.offsetY
+    );
   };
 
   const handleMouseUp = () => {
@@ -259,26 +122,76 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     setIsDragging(false);
   };
 
+  const drawTextBoxes = (ctx: CanvasRenderingContext2D) => {
+    textBoxes.forEach((box) => {
+      ctx.font = `${box.italic ? 'italic ' : ''}${box.bold ? 'bold ' : ''}${box.fontSize}px Arial`;
+      ctx.fillStyle = box.color;
+      ctx.fillText(box.text, box.x, box.y);
+    });
+  };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !imageUrl) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    
+    img.onload = () => {
+      const aspectRatio = img.width / img.height;
+      let width = img.width;
+      let height = img.height;
+
+      // Scale down if image is too large
+      if (width > 300 || height > 400) {
+        if (aspectRatio > 1) {
+          width = 300;
+          height = 300 / aspectRatio;
+        } else {
+          height = 400;
+          width = 400 * aspectRatio;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      setCanvasSize({ width, height });
+
+      // Clear canvas and draw image
+      ctx.clearRect(0, 0, width, height);
+      ctx.drawImage(img, 0, 0, width, height);
+      drawTextBoxes(ctx);
+    };
+
+    img.src = imageUrl;
+  }, [imageUrl, textBoxes]);
+
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
-      <canvas
-        ref={canvasRef}
-        style={{ cursor: isDragging ? 'grabbing' : 'default' }}
-        className={`w-full ${isDragging ? 'cursor-grabbing' : textBoxes.length > 0 ? 'cursor-grab' : 'cursor-default'}`}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onDoubleClick={handleDoubleClick}
-      />
-      <div className="absolute top-2 right-2">
-        <button
-          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg"
-          onClick={handleDownload}
-        >
-          Download
-        </button>
+    <div className="flex flex-col items-center space-y-4">
+      <div className="relative bg-gray-100 rounded-lg p-4 shadow-inner">
+        <canvas
+          ref={canvasRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onDoubleClick={handleDoubleClick}
+          className="max-w-full border border-gray-200 rounded-lg shadow-sm"
+          style={{
+            cursor: isDragging ? 'grabbing' : 'default',
+            touchAction: 'none'
+          }}
+        />
       </div>
+      <button
+        onClick={handleDownload}
+        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium shadow-sm hover:shadow-md"
+      >
+        Download Meme
+      </button>
     </div>
   );
 };

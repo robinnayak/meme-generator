@@ -1,9 +1,11 @@
 "use client";
 import { useState } from 'react';
 import TemplateSelector from '../components/ImageManagement/TemplateSelector';
-import ImageUploader from '../components/ImageManagement/ImageUploader';
 import CanvasPreview from '../components/CanvasControls/CanvasPreview';
 import TextEditor from '../components/TextManipulation/TextEditor';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import Link from 'next/link';
 
 type TextBox = {
   id: string;
@@ -25,44 +27,13 @@ type Template = {
 const Home: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [textBoxes, setTextBoxes] = useState<TextBox[]>([]);
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [undoStack, setUndoStack] = useState<TextBox[][]>([]);
-  const [redoStack, setRedoStack] = useState<TextBox[][]>([]);
   const [editingText, setEditingText] = useState<TextBox | null>(null);
 
-  
   const handleAddTextBox = (textBox: TextBox) => {
-
-    setUndoStack(prev => [...prev, textBoxes]);
-    setRedoStack([]);  // Clear redo stack on new action
     setTextBoxes(prev => [...prev, textBox]);
   };
 
-  const handleUndo = () => {
-    if (undoStack.length === 0) return;
-    
-    const newUndoStack = [...undoStack];
-    const previousState = newUndoStack.pop();
-    
-    setUndoStack(newUndoStack);
-    setRedoStack(prev => [...prev, textBoxes]);
-    setTextBoxes(previousState || []);
-  };
-
-  const handleRedo = () => {
-    if (redoStack.length === 0) return;
-    
-    const newRedoStack = [...redoStack];
-    const nextState = newRedoStack.pop();
-    
-    setRedoStack(newRedoStack);
-    setUndoStack(prev => [...prev, textBoxes]);
-    setTextBoxes(nextState || []);
-  };
-
   const handleUpdateTextPosition = (id: string, x: number, y: number) => {
-    setUndoStack(prev => [...prev, textBoxes]);
-    setRedoStack([]);  // Clear redo stack on new action
     setTextBoxes(prev =>
       prev.map((textBox) =>
         textBox.id === id ? { ...textBox, x, y } : textBox
@@ -78,8 +49,6 @@ const Home: React.FC = () => {
   };
 
   const handleTextUpdate = (updatedText: TextBox) => {
-    setUndoStack(prev => [...prev, textBoxes]);
-    setRedoStack([]);
     setTextBoxes(prev =>
       prev.map((textBox) =>
         textBox.id === updatedText.id ? updatedText : textBox
@@ -89,54 +58,83 @@ const Home: React.FC = () => {
   };
 
   const handleTextDelete = (id: string) => {
-    setUndoStack(prev => [...prev, textBoxes]);
-    setRedoStack([]);
     setTextBoxes(prev => prev.filter(textBox => textBox.id !== id));
-    setEditingText(null); // Clear editing state after deletion
+    setEditingText(null);
   };
 
   const handleSelectTemplate = (template: Template) => {
     setSelectedImage(template.thumbnail);
   };
 
-  const handleImageUpload = (imageUrl: string) => {
-    setSelectedImage(imageUrl);
-  };
-
   return (
-    <main className="p-4 space-y-10">
-      <h1 className="text-2xl font-bold text-center">Meme Generator</h1>
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Select a Meme Template</h2>
-        <TemplateSelector onSelectTemplate={handleSelectTemplate} />
-      </section>
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Upload Your Own Image</h2>
-        <ImageUploader onImageUpload={handleImageUpload} />
-      </section>
-      {selectedImage && (
-        <>
-          <section>
-            <h2 className="text-xl font-semibold mb-4">Canvas Preview</h2>
-            <CanvasPreview
-              imageUrl={selectedImage}
-              textBoxes={textBoxes}
-              onUpdateTextPosition={handleUpdateTextPosition}
-              onTextEdit={handleTextEdit}
-              onTextDelete={handleTextDelete}
+    <main className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+        {/* Header Section */}
+        <div className="text-center space-y-3">
+          <h2 className="text-3xl font-bold text-gray-800">Create Your Perfect Meme</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Choose from hundreds of templates or upload your own image to create a unique and engaging meme.
+          </p>
+        </div>
+
+        {/* Create Custom Meme Button */}
+        <div className="flex justify-center">
+          <Link 
+            href="/custommeme" 
+            className="inline-flex items-center px-6 py-3 text-base font-medium text-blue-600 bg-white border-2 border-blue-500 rounded-lg hover:bg-blue-50 transition duration-300 ease-in-out shadow-sm hover:shadow-md"
+          >
+            Create Your Custom Meme
+          </Link>
+        </div>
+
+        {/* Editor Section */}
+        {selectedImage && (
+          <div className="space-y-8 bg-white rounded-lg shadow-sm p-6">
+            <section>
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">Canvas Preview</h2>
+              <CanvasPreview
+                imageUrl={selectedImage}
+                textBoxes={textBoxes}
+                onUpdateTextPosition={handleUpdateTextPosition}
+                onTextEdit={handleTextEdit}
+                onTextDelete={handleTextDelete}
+              />
+            </section>
+            
+            <section>
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">Add Text</h2>
+              <TextEditor
+                onAddText={handleAddTextBox}
+                editingText={editingText}
+                onUpdateText={handleTextUpdate}
+                onDeleteText={handleTextDelete}
+              />
+            </section>
+          </div>
+        )}
+
+        {/* Templates Section */}
+        <section className="bg-white rounded-lg shadow-sm p-6">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">
+            Popular Templates <span className="text-sm text-gray-600">(Click to Choose a Template)</span>
+          </h2>
+          
+          {/* Search Bar */}
+          <div className="relative mb-6">
+            <input
+              type="search"
+              placeholder="Search Templates"
+              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
             />
-          </section>
-          <section>
-            <h2 className="text-xl font-semibold mb-4">Add Text</h2>
-            <TextEditor 
-              onAddText={handleAddTextBox} 
-              editingText={editingText}
-              onUpdateText={handleTextUpdate}
-              onDeleteText={handleTextDelete}
+            <FontAwesomeIcon 
+              icon={faSearch} 
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"
             />
-          </section>
-        </>
-      )}
+          </div>
+
+          <TemplateSelector onSelectTemplate={handleSelectTemplate} />
+        </section>
+      </div>
     </main>
   );
 };
