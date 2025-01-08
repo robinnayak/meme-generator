@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TemplateSelector from '../components/ImageManagement/TemplateSelector';
 import CanvasPreview from '../components/CanvasControls/CanvasPreview';
 import TextEditor from '../components/TextManipulation/TextEditor';
@@ -28,7 +28,20 @@ const Home: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [textBoxes, setTextBoxes] = useState<TextBox[]>([]);
   const [editingText, setEditingText] = useState<TextBox | null>(null);
-
+  const [shouldScroll, setShouldScroll] = useState(false);
+  
+  
+  useEffect(() => {
+    if (shouldScroll && selectedImage) {
+      const canvasSection = document.getElementById('canvas-preview');
+      if (canvasSection) {
+        canvasSection.scrollIntoView({ behavior: 'smooth' });
+        setShouldScroll(false);
+      }
+    }
+  }, [selectedImage, shouldScroll]);
+  
+  
   const handleAddTextBox = (textBox: TextBox) => {
     setTextBoxes(prev => [...prev, textBox]);
   };
@@ -62,10 +75,14 @@ const Home: React.FC = () => {
     setEditingText(null);
   };
 
+  // const handleSelectTemplate = (template: Template) => {
+  //   alert(`your meme template is selected move to Top page and create your meme`);
+  //   setSelectedImage(template.thumbnail);
+  // };
   const handleSelectTemplate = (template: Template) => {
     setSelectedImage(template.thumbnail);
+    setShouldScroll(true);
   };
-
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
@@ -79,8 +96,8 @@ const Home: React.FC = () => {
 
         {/* Create Custom Meme Button */}
         <div className="flex justify-center">
-          <Link 
-            href="/custommeme" 
+          <Link
+            href="/custommeme"
             className="inline-flex items-center px-6 py-3 text-base font-medium text-blue-600 bg-white border-2 border-blue-500 rounded-lg hover:bg-blue-50 transition duration-300 ease-in-out shadow-sm hover:shadow-md"
           >
             Create Your Custom Meme
@@ -89,10 +106,11 @@ const Home: React.FC = () => {
 
         {/* Editor Section */}
         {selectedImage && (
-          <div className="space-y-8 bg-white rounded-lg shadow-sm p-6">
+          <div id="canvas-preview" className="space-y-8 bg-white rounded-lg shadow-sm p-6">
             <section>
               <h2 className="text-xl font-semibold mb-4 text-gray-800">Canvas Preview</h2>
               <CanvasPreview
+
                 imageUrl={selectedImage}
                 textBoxes={textBoxes}
                 onUpdateTextPosition={handleUpdateTextPosition}
@@ -100,7 +118,7 @@ const Home: React.FC = () => {
                 onTextDelete={handleTextDelete}
               />
             </section>
-            
+
             <section>
               <h2 className="text-xl font-semibold mb-4 text-gray-800">Add Text</h2>
               <TextEditor
@@ -118,7 +136,7 @@ const Home: React.FC = () => {
           <h2 className="text-xl font-semibold mb-4 text-gray-800">
             Popular Templates <span className="text-sm text-gray-600">(Click to Choose a Template)</span>
           </h2>
-          
+
           {/* Search Bar */}
           <div className="relative mb-6">
             <input
@@ -126,8 +144,8 @@ const Home: React.FC = () => {
               placeholder="Search Templates"
               className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
             />
-            <FontAwesomeIcon 
-              icon={faSearch} 
+            <FontAwesomeIcon
+              icon={faSearch}
               className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"
             />
           </div>

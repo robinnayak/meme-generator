@@ -1,7 +1,9 @@
+import Header from "@/components/global/Header";
+
 export default function About() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">About Our Meme Generator</h1>
+      <Header heading="About Our Meme Generator" subheading=" Learn More About Our Meme Generator" />
       <div className="prose max-w-none">
         <p className="text-lg mb-4">
           Welcome to our Meme Generator - a powerful and intuitive tool designed to bring your creative ideas to life! Our platform allows you to easily create, customize, and share memes that stand out from the crowd.

@@ -22,13 +22,12 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
             try {
                 const response = await axios.get('https://api.imgflip.com/get_memes');
                 if (response.data.success) {
-                    const memeTemplates = response.data.data.memes.slice(0, 8).map((meme: any) => ({
+                    const memeTemplates = response.data.data.memes.map((meme: any) => ({
                         id: parseInt(meme.id),
                         name: meme.name,
                         thumbnail: meme.url
                     }));
                     setTemplates(memeTemplates);
-
                 } else {
                     setError('Failed to fetch meme templates');
                 }
@@ -50,9 +49,6 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
     if (error) {
         return <div className="text-red-500 p-4">{error}</div>;
     }
-    console.log("======================================")
-    console.log("templates",templates);
-    console.log("======================================")
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
             {templates.map((template) => (

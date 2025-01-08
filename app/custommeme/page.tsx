@@ -6,6 +6,7 @@ import TextEditor from '../../components/TextManipulation/TextEditor';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import Header from '@/components/global/Header';
 
 type TextBox = {
   id: string;
@@ -72,9 +73,8 @@ const CustomMeme = () => {
             <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
             <span>Back to Templates</span>
           </Link>
-          <h1 className="text-2xl font-bold text-gray-800">Create Custom Meme</h1>
         </div>
-
+        <Header heading="Create Custom Meme" subheading="Customize Your Meme" />
         {/* Main Content */}
         <div className="grid md:grid-cols-2 gap-8">
           {/* Left Column - Upload and Preview */}

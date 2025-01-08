@@ -1,3 +1,5 @@
+import Header from "@/components/global/Header";
+
 export default function FAQ() {
     const faqs = [
         {
@@ -32,7 +34,7 @@ export default function FAQ() {
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-8">Frequently Asked Questions</h1>
+            <Header heading="Frequently Asked Questions" subheading="" />
             <div className="space-y-6">
                 {faqs.map((faq, index) => (
                     <div key={index} className="bg-white rounded-lg shadow-sm p-6">
