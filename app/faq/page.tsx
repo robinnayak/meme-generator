@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Header from "@/components/global/Header";
-import AdBanner from "@/components/Ads/AdBanner";
+import { NativeAd } from "@/components/Ads/AdBanner";
 import { BASE_URL } from '@/components/services/baseurl';
 
 export const metadata: Metadata = {
@@ -42,7 +42,7 @@ export default function FAQ() {
 
       {/* Native ad after header */}
       <div className="my-8 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
-        <AdBanner type="native" style={{ margin: '0 auto' }} />
+        <NativeAd style={{ margin: '0 auto' }} />
       </div>
 
       <div className="space-y-8">
@@ -56,7 +56,7 @@ export default function FAQ() {
             {/* Add direct link after every 2 FAQs */}
             {(index + 1) % 2 === 0 && (
               <div className="text-center py-4">
-                <AdBanner type="direct" style={{
+                <NativeAd style={{
                   display: 'inline-block',
                   padding: '0.75rem 1.5rem',
                   backgroundColor: '#f8fafc',
@@ -74,7 +74,7 @@ export default function FAQ() {
 
       {/* Native ad at bottom */}
       <div className="mt-12 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
-        <AdBanner type="native" style={{ margin: '0 auto' }} />
+        <NativeAd style={{ margin: '0 auto' }} />
       </div>
     </div>
   );

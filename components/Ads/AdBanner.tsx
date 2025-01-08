@@ -1,87 +1,84 @@
 'use client';
 
-import React, { useEffect, useCallback } from 'react';
+import React from 'react';
+import Script from 'next/script';
 
-interface AdBannerProps {
-  type: 'native' | 'social' | 'direct';
+interface AdProps {
   style?: React.CSSProperties;
 }
 
-interface ScriptAttributes {
-  type?: string;
-  src?: string;
-  async?: boolean;
-  'data-cfasync'?: string;
-  'data-adel'?: string;
-}
+export const NativeAd: React.FC<AdProps> = ({ style }) => (
+  <>
+    <Script
+      async
+      data-cfasync="false"
+      src="//pl25513408.profitablecpmrate.com/88f8872a9af2ec71bdde47dd011bb6c6/invoke.js"
+      strategy="lazyOnload"
+    />
+    <div
+      id="container-88f8872a9af2ec71bdde47dd011bb6c6"
+      style={{ ...style, minHeight: '100px' }}
+    />
+  </>
+);
 
-const AdBanner: React.FC<AdBannerProps> = ({ type, style }) => {
-  const injectScript = useCallback((attributes: ScriptAttributes) => {
-    const script = document.createElement('script');
-    Object.entries(attributes).forEach(([key, value]) => {
-      if (value !== undefined) {
-        script.setAttribute(key, value.toString());
-      }
-    });
-    document.head.appendChild(script);
-  }, []);
+export const SocialAd: React.FC<AdProps> = ({ style }) => (
+  <>
+    <Script
+      src="//pl25513470.profitablecpmrate.com/a1/00/c6/a100c655a6b7938ff9c68207a995ac15.js"
+      strategy="lazyOnload"
+    />
+    <div style={{ ...style, minHeight: '100px' }} />
+  </>
+);
 
-  const loadNativeAd = useCallback(() => {
-    const scriptAttributes: ScriptAttributes = {
-      type: 'text/javascript',
-      src: '//pl21736204.toprevenuegate.com/68/35/5e/68355e5cdd69b94ba4e2265bf8de3075.js',
-      async: true,
-      'data-cfasync': 'false',
-    };
-    injectScript(scriptAttributes);
-  }, [injectScript]);
+export const BannerAd: React.FC<AdProps> = ({ style }) => (
+  <>
+    <Script id="banner-options" strategy="lazyOnload">
+      {`
+        window.atOptions = {
+          'key': '81739498e28e1a2e5a1b093d92e6e980',
+          'format': 'iframe',
+          'height': 60,
+          'width': 468,
+          'params': {}
+        };
+      `}
+    </Script>
+    <Script
+      src="//www.highperformanceformat.com/81739498e28e1a2e5a1b093d92e6e980/invoke.js"
+      strategy="lazyOnload"
+    />
+    <div style={{ ...style, height: '60px', width: '468px', margin: '0 auto' }} />
+  </>
+);
 
-  const loadSocialAd = useCallback(() => {
-    const scriptAttributes: ScriptAttributes = {
-      type: 'text/javascript',
-      src: '//pl21736204.toprevenuegate.com/d6/c9/54/d6c954adb312b4b0298f52d82deb0ad6.js',
-      async: true,
-      'data-cfasync': 'false',
-    };
-    injectScript(scriptAttributes);
-  }, [injectScript]);
+export const DirectAd: React.FC<AdProps> = ({ style }) => (
+  <div className="flex flex-col items-center" style={style}>
+    <span className="text-xs text-gray-500 mb-2">Sponsored</span>
+    <a
+      href="https://www.profitablecpmrate.com/ewuse2cci?key=d7b0c37e8cea7a7c8a0f878e617d11ea"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    >
+      Visit Advertiser
+    </a>
+  </div>
+);
 
-  const loadDirectAd = useCallback(() => {
-    const scriptAttributes: ScriptAttributes = {
-      type: 'text/javascript',
-      src: '//pl21736204.toprevenuegate.com/31/8c/c9/318cc92f94b0557b3f725d33d0a6f0e6.js',
-      async: true,
-      'data-cfasync': 'false',
-    };
-    injectScript(scriptAttributes);
-  }, [injectScript]);
-
-  useEffect(() => {
-    if (type === 'native') {
-      loadNativeAd();
-    } else if (type === 'social') {
-      loadSocialAd();
-    } else if (type === 'direct') {
-      loadDirectAd();
-    }
-
-    return () => {
-      const scripts = document.getElementsByTagName('script');
-      for (const script of scripts) {
-        if (script.src.includes('toprevenuegate.com')) {
-          script.remove();
-        }
-      }
-    };
-  }, [type, loadNativeAd, loadSocialAd, loadDirectAd]);
-
-  return (
-    <div style={style}>
-      {type === 'native' && <div id="container-68355e5cdd69b94ba4e2265bf8de3075"></div>}
-      {type === 'social' && <div id="container-d6c954adb312b4b0298f52d82deb0ad6"></div>}
-      {type === 'direct' && <div id="container-318cc92f94b0557b3f725d33d0a6f0e6"></div>}
-    </div>
-  );
+// For backward compatibility
+const AdBanner: React.FC<{ type: 'native' | 'social' | 'direct' | 'banner'; style?: React.CSSProperties }> = ({ type, style }) => {
+  switch (type) {
+    case 'native':
+      return <NativeAd style={style} />;
+    case 'social':
+      return <SocialAd style={style} />;
+    case 'banner':
+      return <BannerAd style={style} />;
+    case 'direct':
+      return <DirectAd style={style} />;
+  }
 };
 
 export default AdBanner;

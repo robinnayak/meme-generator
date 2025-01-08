@@ -86,8 +86,8 @@ export default function RootLayout({
         <main className="flex-grow pb-16">
           {children}
         </main>
-        <div className="fixed bottom-0 left-0 right-0 z-50">
-          <AdBanner type="social" />
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg">
+          <AdBanner type="social" style={{ margin: '0 auto', maxWidth: '728px' }} />
         </div>
         <Footer />
       </body>

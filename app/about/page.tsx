@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Header from "@/components/global/Header";
 import { BASE_URL } from '@/components/services/baseurl';
-import AdBanner from '@/components/Ads/AdBanner';
+import { NativeAd, DirectAd } from '@/components/Ads/AdBanner';
 
 export const metadata: Metadata = {
   title: 'About Our Meme Generator - Free Online Meme Creation Tool',
@@ -54,8 +54,17 @@ export default function About() {
       />
 
       {/* Native ad after header */}
-      <div className="my-8 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
-        <AdBanner type="native" style={{ margin: '2rem auto' }} />
+      <div className="my-8">
+        <NativeAd 
+          style={{ 
+            margin: '0 auto',
+            maxWidth: '728px',
+            minHeight: '280px',
+            backgroundColor: '#f8fafc',
+            borderRadius: '0.5rem',
+            padding: '1rem'
+          }} 
+        />
       </div>
 
       <div className="prose max-w-none">
@@ -65,7 +74,7 @@ export default function About() {
 
         {/* Direct link in content */}
         <div className="my-6 text-center">
-          <AdBanner type="direct" style={{
+          <DirectAd style={{
             display: 'inline-block',
             padding: '0.75rem 1.5rem',
             backgroundColor: '#f8fafc',
@@ -87,8 +96,17 @@ export default function About() {
         </ul>
 
         {/* Native ad in middle of content */}
-        <div className="my-8 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
-          <AdBanner type="social" style={{ margin: '0 auto' }} />
+        <div className="my-8">
+          <NativeAd 
+            style={{ 
+              margin: '0 auto',
+              maxWidth: '728px',
+              minHeight: '280px',
+              backgroundColor: '#f8fafc',
+              borderRadius: '0.5rem',
+              padding: '1rem'
+            }} 
+          />
         </div>
 
         <h2 className="text-2xl font-semibold mt-6 mb-4">Our Mission</h2>
@@ -103,7 +121,7 @@ export default function About() {
 
         {/* Direct link at bottom */}
         <div className="mt-8 mb-4 text-center">
-          <AdBanner type="direct" style={{
+          <DirectAd style={{
             display: 'inline-block',
             padding: '0.75rem 1.5rem',
             backgroundColor: '#f8fafc',
