@@ -5,6 +5,7 @@ import Header from '@/components/global/Header';
 import { motion } from 'framer-motion';
 import MemeGuideCover from '@/public/assets/meme-guide-cover.jpg';
 import MemeAnalysisCover from '@/public/assets/meme-guide-cover1.jpg';
+
 // Blog post type definition
 type BlogPost = {
   slug: string;
@@ -95,7 +96,7 @@ const BlogCard = ({ post }: { post: BlogPost }) => {
   );
 };
 
-const Blog = () => {
+const BlogClient = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-6xl mx-auto px-4">
@@ -117,4 +118,4 @@ const Blog = () => {
   );
 };
 
-export default Blog;
+export default BlogClient;

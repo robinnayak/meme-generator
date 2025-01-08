@@ -1,4 +1,27 @@
+import type { Metadata } from 'next';
 import Header from "@/components/global/Header";
+import { BASE_URL } from '@/components/services/baseurl';
+
+export const metadata: Metadata = {
+  title: 'Frequently Asked Questions - Meme Generator Help & Support',
+  description: 'Get answers to common questions about using our meme generator. Learn how to create memes, add text, customize fonts, and more. Step-by-step guides and helpful tips.',
+  alternates: {
+    canonical: `${BASE_URL}/faq`,
+  },
+  openGraph: {
+    title: 'Meme Generator FAQ - Help & Support',
+    description: 'Get answers to common questions about using our meme generator. Step-by-step guides included.',
+    url: `${BASE_URL}/faq`,
+    images: [
+      {
+        url: '/faq-og.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Meme Generator FAQ Page',
+      }
+    ],
+  },
+};
 
 export default function FAQ() {
     const faqs = [
@@ -32,17 +55,37 @@ export default function FAQ() {
         }
     ];
 
+    // Create FAQ structured data
+    const faqStructuredData = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqs.map(faq => ({
+            '@type': 'Question',
+            name: faq.question,
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: faq.answer
+            }
+        }))
+    };
+
     return (
-        <div className="max-w-4xl mx-auto px-4 py-8">
-            <Header heading="Frequently Asked Questions" subheading="" />
-            <div className="space-y-6">
-                {faqs.map((faq, index) => (
-                    <div key={index} className="bg-white rounded-lg shadow-sm p-6">
-                        <h3 className="text-xl font-semibold mb-3">{faq.question}</h3>
-                        <p className="text-gray-600 whitespace-pre-line">{faq.answer}</p>
-                    </div>
-                ))}
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+            />
+            <div className="max-w-4xl mx-auto px-4 py-8">
+                <Header heading="Frequently Asked Questions" subheading="Find answers to common questions about using our Meme Generator" />
+                <div className="space-y-6">
+                    {faqs.map((faq, index) => (
+                        <div key={index} className="bg-white rounded-lg shadow-sm p-6">
+                            <h2 className="text-xl font-semibold text-gray-800 mb-3">{faq.question}</h2>
+                            <p className="text-gray-600 whitespace-pre-line">{faq.answer}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
-        </div>
+        </>
     );
 }
