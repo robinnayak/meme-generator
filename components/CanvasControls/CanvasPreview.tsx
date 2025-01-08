@@ -76,15 +76,25 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     // Handle both data URLs and regular URLs
     if (imageUrl.startsWith('data:')) {
       img.src = imageUrl;
+    } else if (imageUrl.startsWith('http')) {
+      // For absolute URLs (like https://i.imgflip.com/...)
+      img.src = imageUrl;
     } else {
-      // For regular URLs (like /assets/meme1.jpg), add base URL
+      // For relative URLs (like /assets/meme1.jpg)
       img.src = window.location.origin + imageUrl;
+    }
+  }, [imageUrl]);
+
+  useEffect(() => {
+    if (imageUrl) {
+      drawTextBoxes();
     }
   }, [imageUrl]);
 
   const drawTextBoxes = () => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !imageUrl) return;
+    
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
@@ -94,6 +104,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     img.crossOrigin = 'anonymous';
     
     img.onload = () => {
+      // Draw the image
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       
       // Draw text boxes
@@ -106,9 +117,22 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
       });
     };
 
-    if (imageUrl?.startsWith('data:')) {
+    img.onerror = (error) => {
+      console.error('Error loading image:', error);
+      // Draw a placeholder or error message
+      ctx.fillStyle = '#f0f0f0';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#666';
+      ctx.font = '16px Arial';
+      ctx.fillText('Error loading image', canvas.width/2 - 50, canvas.height/2);
+    };
+
+    // Set the image source
+    if (imageUrl.startsWith('data:')) {
       img.src = imageUrl;
-    } else if (imageUrl) {
+    } else if (imageUrl.startsWith('http')) {
+      img.src = imageUrl;
+    } else {
       img.src = window.location.origin + imageUrl;
     }
   };
