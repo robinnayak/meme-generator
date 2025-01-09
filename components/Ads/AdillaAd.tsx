@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Script from "next/script";
 
 interface AdillaAdProps {
     style?: React.CSSProperties;
@@ -15,11 +14,7 @@ interface AdillaComponentProps {
 export const AdillaBannerAd: React.FC<AdillaAdProps> = ({ style }) => {
     return (
         <>
-            <Script
-                async
-                src="https://js.wpadmngr.com/static/adManager.js"
-                strategy="lazyOnload"
-            />
+            <div data-banner-id="1432610"></div>
             <div className="flex justify-center w-full">
                 <div
                     id="adilla-banner"
@@ -48,3 +43,5 @@ const AdillaAd: React.FC<AdillaComponentProps> = ({ type = 'Banner' }) => {
 };
 
 export default AdillaAd;
+
+
