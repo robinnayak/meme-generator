@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import { BASE_URL } from "@/components/services/baseurl";
 import {SocialAd } from "@/components/Ads/AdBanner";
 import Script from 'next/script';
+import AdillaAd from "@/components/Ads/AdillaAd";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -98,6 +99,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} font-sans min-h-screen flex flex-col`}
       >
         <Navbar />
+        <div className="sticky top-0 z-10 bg-white shadow-sm">
+          <AdillaAd type="Banner" />
+        </div>
         <main className="flex-grow pb-16">
           {children}
         </main>
