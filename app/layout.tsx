@@ -89,7 +89,8 @@ export default function RootLayout({
             gtag('config', 'G-JX3S8TX2ZH');
           `}
         </Script>
-        <script
+        <Script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="278307"></Script>
+        <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR-AD-CLIENT-ID"
           crossOrigin="anonymous"
