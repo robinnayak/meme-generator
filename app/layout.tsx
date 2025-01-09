@@ -4,7 +4,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { BASE_URL } from "@/components/services/baseurl";
-import AdBanner from "@/components/Ads/AdBanner";
+import {SocialAd } from "@/components/Ads/AdBanner";
 import Script from 'next/script';
 
 const geistSans = Geist({
@@ -20,34 +20,35 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     template: "%s | Meme Generator",
-    default: "Meme Generator - Create Custom Memes Online - Robin Nayak",
+    default: "Meme Generator Nepal - Create Custom Memes Online - Robin Nayak",
   },
-  description: "Create and customize memes easily with our free online meme generator. Choose from popular templates or upload your own images.",
+  description: "Create and customize memes easily with Nepal's free online meme generator. Choose from popular templates or upload your own images to create unique memes.",
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
     apple: "/favicon.ico",
   },
   keywords: [
-    'meme generator',
-    'meme maker',
-    'custom memes',
-    'online meme creator',
-    'free meme generator',
-    'meme editor'
+    'meme generator nepal',
+    'nepali meme maker',
+    'custom memes nepal',
+    'online meme creator nepal',
+    'free meme generator nepal',
+    'meme editor nepal',
+    'nepali memes'
   ],
   authors: [{ name: 'Robin Nayak' }],
   openGraph: {
     type: 'website',
-    siteName: 'Meme Generator',
-    title: 'Meme Generator - Create Custom Memes Online',
-    description: 'Free online tool to create and customize memes. Choose from templates or upload your own images.',
+    siteName: 'Meme Generator Nepal',
+    title: 'Meme Generator Nepal - Create Custom Memes Online',
+    description: 'Nepal\'s free online tool to create and customize memes. Choose from templates or upload your own images to create Nepali memes.',
     url: `${BASE_URL}`
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Meme Generator - Create Custom Memes Online',
-    description: 'Free online tool to create and customize memes. Choose from templates or upload your own images.',
+    title: 'Meme Generator Nepal - Create Custom Memes Online',
+    description: 'Nepal\'s free online tool to create and customize memes. Choose from templates or upload your own images to create Nepali memes.',
     creator: '@robinnayak'  // Replace with your Twitter handle
   },
   robots: {
@@ -100,9 +101,7 @@ export default function RootLayout({
         <main className="flex-grow pb-16">
           {children}
         </main>
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg">
-          <AdBanner type="social" style={{ margin: '0 auto', maxWidth: '728px' }} />
-        </div>
+        <SocialAd style={{ margin: '0 auto' }} />
         <Footer />
       </body>
     </html>
