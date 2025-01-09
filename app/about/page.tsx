@@ -4,14 +4,14 @@ import { BASE_URL } from '@/components/services/baseurl';
 import { NativeAd, DirectAd } from '@/components/Ads/AdBanner';
 
 export const metadata: Metadata = {
-  title: 'About Our Meme Generator - Free Online Meme Creation Tool',
+  title: 'About Our Meme Generator Nepal - Free Online Meme Creation Tool',
   description: 'Learn about our powerful and intuitive meme generator. Create, customize, and share memes with our easy-to-use platform. Features include text customization, real-time preview, and instant downloads.',
   alternates: {
     canonical: `${BASE_URL}/about`,
   },
   openGraph: {
-    title: 'About Our Meme Generator - Free Online Meme Creation Tool',
-    description: 'Learn about our powerful and intuitive meme generator. Create and share memes easily.',
+    title: 'About Our Meme Generator Nepal - Free Online Meme Creation Tool',
+    description: 'Learn about Nepal\'s powerful and intuitive meme generator. Create, customize, and share Nepali memes with our easy-to-use platform. Features include text customization, real-time preview, and instant downloads.',
     url: `${BASE_URL}/about`,
 
   },
@@ -96,7 +96,7 @@ export default function About() {
         </ul>
 
         {/* Native ad in middle of content */}
-        <div className="my-8">
+        {/* <div className="my-8">
           <NativeAd 
             style={{ 
               margin: '0 auto',
@@ -107,7 +107,7 @@ export default function About() {
               padding: '1rem'
             }} 
           />
-        </div>
+        </div> */}
 
         <h2 className="text-2xl font-semibold mt-6 mb-4">Our Mission</h2>
         <p className="text-lg mb-4">

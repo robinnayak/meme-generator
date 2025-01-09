@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import Header from "@/components/global/Header";
-import { NativeAd } from "@/components/Ads/AdBanner";
+import { DirectAd, NativeAd } from "@/components/Ads/AdBanner";
 import { BASE_URL } from '@/components/services/baseurl';
 
 export const metadata: Metadata = {
-  title: 'FAQ - Frequently Asked Questions',
-  description: 'Find answers to commonly asked questions about our Meme Generator tool.',
+  title: 'FAQ - Meme Generator Nepal',
+  description: 'Frequently asked questions about Meme Generator Nepal. Learn how to create, customize, and share Nepali memes using our free online meme generator.',
   openGraph: {
-    title: 'FAQ - Meme Generator Help',
-    description: 'Find answers to commonly asked questions about our Meme Generator tool.',
+    title: 'FAQ - Meme Generator Nepal',
+    description: 'Frequently asked questions about Meme Generator Nepal. Learn how to create, customize, and share Nepali memes using our free online meme generator.',
     url: `${BASE_URL}/faq`,
   },
 };
@@ -54,7 +54,7 @@ export default function FAQ() {
             </div>
 
             {/* Add direct link after every 2 FAQs */}
-            {(index + 1) % 2 === 0 && (
+            {/* {(index + 1) % 2 === 0 && (
               <div className="text-center py-4">
                 <NativeAd style={{
                   display: 'inline-block',
@@ -67,14 +67,14 @@ export default function FAQ() {
                   boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
                 }} />
               </div>
-            )}
+            )} */}
           </>
         ))}
       </div>
 
       {/* Native ad at bottom */}
       <div className="mt-12 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
-        <NativeAd style={{ margin: '0 auto' }} />
+        <DirectAd style={{ margin: '0 auto' }} />
       </div>
     </div>
   );

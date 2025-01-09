@@ -71,9 +71,9 @@ export default function Contact() {
       </div>
 
       {/* Native ad at bottom */}
-      <div className="mt-12 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
+      {/* <div className="mt-12 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
         <NativeAd style={{ margin: '0 auto' }} />
-      </div>
+      </div> */}
     </div>
   );
 }

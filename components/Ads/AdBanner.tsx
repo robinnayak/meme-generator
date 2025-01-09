@@ -17,7 +17,7 @@ export const NativeAd: React.FC<AdProps> = ({ style }) => (
     />
     <div
       id="container-88f8872a9af2ec71bdde47dd011bb6c6"
-      style={{ ...style, minHeight: '100px' }}
+      style={{ ...style }}
     />
   </>
 );
@@ -54,15 +54,14 @@ export const BannerAd: React.FC<AdProps> = ({ style }) => (
 );
 
 export const DirectAd: React.FC<AdProps> = ({ style }) => (
-  <div className="flex flex-col items-center" style={style}>
-    <span className="text-xs text-gray-500 mb-2">Sponsored</span>
+  <div className="flex items-center justify-center mt-4" style={style}>
     <a
       href="https://www.profitablecpmrate.com/ewuse2cci?key=d7b0c37e8cea7a7c8a0f878e617d11ea"
       target="_blank"
       rel="noopener noreferrer"
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
     >
-      Visit Advertiser
+      Meme Sponsered
     </a>
   </div>
 );

@@ -13,14 +13,19 @@ const Navbar = () => {
         setIsOpen(!isOpen);
     };
 
+    const handleNavigation = (path: string) => {
+        // setIsOpen(false);
+        window.location.href = path;
+    };
+
     return (
         <nav className="bg-white shadow-md relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
                     <div className="flex-shrink-0 flex items-center">
-                        <Link href="/" className='flex items-center gap-2'>
+                        <Link href="/" className='flex items-center gap-2' onClick={(e) => { e.preventDefault(); handleNavigation('/'); }}>
                             <span className="text-sm logo-text font-bold tracking-wide">
-                                Meme<span className="text-primary">Creator</span>
+                                Meme<span className="text-primary"> Generator Nepal</span>
                             </span>
                             <Image
                                 src={MemeLogo}
@@ -51,22 +56,22 @@ const Navbar = () => {
                     {/* Desktop menu */}
                     <div className="hidden md:flex items-center">
                         <div className="ml-10 flex items-baseline space-x-4">
-                            <Link href="/custommeme" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <Link href="/custommeme" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900" onClick={(e) => { e.preventDefault(); handleNavigation('/custommeme'); }}>
                                 Custom Meme
                             </Link>
                             {/* <Link href="/blog" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
                                 Blog
                             </Link> */}
-                            <Link href="/about" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <Link href="/about" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900" onClick={(e) => { e.preventDefault(); handleNavigation('/about'); }}>
                                 About
                             </Link>
-                            <Link href="/contact" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <Link href="/contact" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900" onClick={(e) => { e.preventDefault(); handleNavigation('/contact'); }}>
                                 Contact
                             </Link>
-                            <Link href="/faq" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <Link href="/faq" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900" onClick={(e) => { e.preventDefault(); handleNavigation('/faq'); }}>
                                 FAQ
                             </Link>
-                            <Link href="/privacy" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <Link href="/privacy" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900" onClick={(e) => { e.preventDefault(); handleNavigation('/privacy'); }}>
                                 Privacy Policy
                             </Link>
                         </div>
@@ -80,35 +85,35 @@ const Navbar = () => {
                     <Link
                         href="/about"
                         className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                        onClick={() => setIsOpen(false)}
+                        onClick={(e) => { setIsOpen(false); e.preventDefault(); handleNavigation('/about'); }}
                     >
                         About
                     </Link>
                     <Link
                         href="/blog"
                         className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                        onClick={() => setIsOpen(false)}
+                        onClick={(e) => { setIsOpen(false); e.preventDefault(); handleNavigation('/blog'); }}
                     >
                         Blog
                     </Link>
                     <Link
                         href="/contact"
                         className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                        onClick={() => setIsOpen(false)}
+                        onClick={(e) => { setIsOpen(false); e.preventDefault(); handleNavigation('/contact'); }}
                     >
                         Contact
                     </Link>
                     <Link
                         href="/faq"
                         className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                        onClick={() => setIsOpen(false)}
+                        onClick={(e) => { setIsOpen(false); e.preventDefault(); handleNavigation('/faq'); }}
                     >
                         FAQ
                     </Link>
                     <Link
                         href="/privacy"
                         className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                        onClick={() => setIsOpen(false)}
+                        onClick={(e) => { setIsOpen(false); e.preventDefault(); handleNavigation('/privacy'); }}
                     >
                         Privacy Policy
                     </Link>

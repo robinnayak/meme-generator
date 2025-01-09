@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import Header from "@/components/global/Header";
-import AdBanner from "@/components/Ads/AdBanner";
+import { DirectAd, NativeAd } from "@/components/Ads/AdBanner";
 import { BASE_URL } from '@/components/services/baseurl';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy - Meme Generator',
-  description: 'Our privacy policy explains how we handle your data when you use our Meme Generator.',
+  title: 'Privacy Policy - Meme Generator Nepal',
+  description: 'Privacy policy for Meme Generator Nepal. Learn how we protect your data while you create and share Nepali memes using our free online meme generator.',
   openGraph: {
-    title: 'Privacy Policy - Meme Generator',
-    description: 'Our privacy policy explains how we handle your data when you use our Meme Generator.',
+    title: 'Privacy Policy - Meme Generator Nepal',
+    description: 'Privacy policy for Meme Generator Nepal. Learn how we protect your data while you create and share Nepali memes using our free online meme generator.',
     url: `${BASE_URL}/privacy`,
   },
 };
@@ -23,7 +23,7 @@ export default function Privacy() {
 
       {/* Native ad after header */}
       <div className="my-8 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
-        <AdBanner type="native" style={{ margin: '0 auto' }} />
+        <NativeAd style={{ margin: '0 auto' }} />
       </div>
 
       <div className="prose max-w-none">
@@ -41,7 +41,7 @@ export default function Privacy() {
         </section>
 
         {/* Direct link after first section */}
-        <div className="my-8 text-center">
+        {/* <div className="my-8 text-center">
           <AdBanner type="direct" style={{
             display: 'inline-block',
             padding: '0.75rem 1.5rem',
@@ -52,7 +52,7 @@ export default function Privacy() {
             transition: 'all 0.2s',
             boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
           }} />
-        </div>
+        </div> */}
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">How We Use Your Information</h2>
@@ -67,21 +67,12 @@ export default function Privacy() {
         </section>
 
         {/* Native ad in middle */}
-        <div className="my-8 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
+        {/* <div className="my-8 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
           <AdBanner type="native" style={{ margin: '0 auto' }} />
-        </div>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Data Security</h2>
-          <p className="text-gray-600">
-            We take appropriate measures to protect your information. Your uploaded images are temporarily stored and
-            automatically deleted after processing. We do not share your personal information with third parties.
-          </p>
-        </section>
-
+        </div> */}
         {/* Direct link before contact section */}
         <div className="my-8 text-center">
-          <AdBanner type="direct" style={{
+          <DirectAd style={{
             display: 'inline-block',
             padding: '0.75rem 1.5rem',
             backgroundColor: '#f8fafc',
@@ -94,6 +85,16 @@ export default function Privacy() {
         </div>
 
         <section className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Data Security</h2>
+          <p className="text-gray-600">
+            We take appropriate measures to protect your information. Your uploaded images are temporarily stored and
+            automatically deleted after processing. We do not share your personal information with third parties.
+          </p>
+        </section>
+
+
+
+        <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
           <p className="text-gray-600">
             If you have any questions about our privacy policy, please contact us at privacy@memegenerator.com
@@ -101,9 +102,23 @@ export default function Privacy() {
         </section>
 
         {/* Native ad at bottom */}
-        <div className="mt-12 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
+        {/* <div className="mt-12 p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
           <AdBanner type="native" style={{ margin: '0 auto' }} />
+        </div> */}
+        <div className="my-8 text-center">
+
+          <DirectAd style={{
+            display: 'inline-block',
+            padding: '0.75rem 1.5rem',
+            backgroundColor: '#f8fafc',
+            borderRadius: '0.5rem',
+            border: '1px solid #e2e8f0',
+            fontWeight: 500,
+            transition: 'all 0.2s',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+          }} />
         </div>
+
       </div>
     </div>
   );
