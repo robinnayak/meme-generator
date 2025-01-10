@@ -59,9 +59,9 @@ const Navbar = () => {
                             <Link href="/custommeme" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900" onClick={(e) => { e.preventDefault(); handleNavigation('/custommeme'); }}>
                                 Custom Meme
                             </Link>
-                            {/* <Link href="/blog" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <Link href="/blog" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900" onClick={(e) => { e.preventDefault(); handleNavigation('/blog'); }}>
                                 Blog
-                            </Link> */}
+                            </Link>
                             <Link href="/about" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900" onClick={(e) => { e.preventDefault(); handleNavigation('/about'); }}>
                                 About
                             </Link>
