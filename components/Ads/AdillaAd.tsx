@@ -14,29 +14,21 @@ interface AdillaComponentProps {
 
 export const AdillaBannerAd: React.FC<AdillaAdProps> = ({ style }) => {
     return (
-        <>
+        <div className="flex justify-center w-full">
             <Script
                 async
                 src="https://js.wpadmngr.com/static/adManager.js"
                 data-admpid="278307"
                 strategy="afterInteractive"
             />
-            <div data-banner-id="1432610"></div>
-            <div className="flex justify-center w-full">
-                <div
-                    id="adilla-banner"
-                    style={{
-                        width: '728px',
-                        height: '90px',
-                        margin: '10px auto',
-                        backgroundColor: '#f8f9fa',
-                        border: '1px solid #e9ecef',
-                        borderRadius: '4px',
-                        ...style
-                    }}
-                />
-            </div>
-        </>
+            <div data-banner-id="1432610" style={
+                {
+                    width: '728px',
+                    height: '90px',
+                    ...style
+                }
+            }></div>
+        </div>
     );
 };
 
