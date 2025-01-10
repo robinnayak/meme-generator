@@ -100,7 +100,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} font-sans min-h-screen flex flex-col`}
       >
         <Navbar />
-        <div className="sticky top-0 z-10 bg-white shadow-sm">
+        <div className="my-8 p-4 border border-gray-200 rounded-lg bg-white shadow-sm">
           <AdillaAd type="Banner" />
         </div>
         <main className="flex-grow pb-16">
