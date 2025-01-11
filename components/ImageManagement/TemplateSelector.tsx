@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
 import { DirectAd, NativeAd } from '../Ads/AdBanner';
+import AdCashAd from '../Ads/AdCash';
 
 interface MemeApiResponse {
     id: string;
@@ -82,7 +83,10 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
             <div className="mb-8 p-4 border border-gray-200 rounded-lg bg-gray-50">
                 <NativeAd style={{ margin: '0 auto' }} />
             </div>
-            
+
+            {/* For Banner Ads */}
+            <AdCashAd type="Banner" zoneId="9343654" />
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {templates.map((template, index) => (
                     <React.Fragment key={template.id}>
@@ -108,10 +112,12 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
                                 </p>
                             </div>
                         </div>
-                        
+
                         {/* Add sponsored link after every 6th template */}
                         {(index + 1) % 6 === 0 && (
                             <div className="col-span-full py-8">
+                                {/* For Banner Ads */}
+                                <AdCashAd type="Banner" zoneId="9343654" />
                                 <DirectAd style={{
                                     display: 'block',
                                     margin: '0 auto',
@@ -128,7 +134,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
                     </React.Fragment>
                 ))}
             </div>
-            
+
             {/* Native ad at the bottom */}
             {/* <div className="mt-8 p-4 border border-gray-200 rounded-lg bg-gray-50">
                 <SocialAd style={{ margin: '0 auto' }} />

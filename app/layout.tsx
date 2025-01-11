@@ -4,7 +4,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { BASE_URL } from "@/components/services/baseurl";
-import {SocialAd } from "@/components/Ads/AdBanner";
+import { SocialAd } from "@/components/Ads/AdBanner";
 import Script from 'next/script';
 import AdillaAd from "@/components/Ads/AdillaAd";
 
@@ -76,6 +76,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <Script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></Script>
+
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-JX3S8TX2ZH"
           strategy="afterInteractive"
