@@ -9,7 +9,7 @@ interface AdCashProps {
 }
 
 interface AdCashComponentProps {
-    type: 'Banner' | 'Native';
+    type: 'Banner' | 'Native' | 'Autotag';
     className?: string;
     zoneId: string;
 }
@@ -19,6 +19,7 @@ declare global {
         aclib: {
             runBanner: (config: { zoneId: string }) => void;
             runNative: (config: { zoneId: string }) => void;
+            runAutotag: () => void;
         };
     }
 }
@@ -66,6 +67,7 @@ export const AdCashNativeAd: React.FC<AdCashProps> = ({ style, zoneId }) => {
     return (
         <AdContainer style={style}>
             <Script
+                id="aclib"
                 src="https://aclib.net/libs/aclib.js"
                 strategy="lazyOnload"
                 onLoad={() => {
@@ -81,11 +83,31 @@ export const AdCashNativeAd: React.FC<AdCashProps> = ({ style, zoneId }) => {
     );
 };
 
+export const AdCashAdAutotag = () => {
+    return (
+        <Script
+            id="aclib"
+            src="https://aclib.net/libs/aclib.js"
+            type='text/javascript'
+            strategy="lazyOnload"
+            onLoad={() => {
+                if (typeof window !== 'undefined' && window.aclib) {
+                    window.aclib.runNative({
+                        zoneId: 'i4cxmynhg2',
+                    });
+                }
+            }}
+        />
+    );
+};
+
+
 const AdCashAd: React.FC<AdCashComponentProps> = ({ type, zoneId, className }) => {
     return (
         <div className={className}>
             {type === 'Banner' && <AdCashBannerAd zoneId={zoneId} />}
             {type === 'Native' && <AdCashNativeAd zoneId={zoneId} />}
+            {type === 'Autotag' && <AdCashAdAutotag  />}
         </div>
     );
 };

@@ -85,7 +85,9 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
             </div>
 
             {/* For Banner Ads */}
-            <AdCashAd type="Banner" zoneId="9343654" />
+            <div className="mb-1 p-4 border border-gray-200 rounded-lg bg-gray-50 ">
+                <AdCashAd type="Autotag" zoneId="i4cxmynhg2" />
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {templates.map((template, index) => (
