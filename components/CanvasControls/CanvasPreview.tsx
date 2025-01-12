@@ -30,9 +30,10 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dragRef = useRef<{ id: string; offsetX: number; offsetY: number } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-
+  const [isDownloading, setIsDownloading] = useState(false);
   const handleDownload = async () => {
     if (canvasRef.current) {
+      setIsDownloading(true);
       try {
         const canvas = await html2canvas(canvasRef.current, { 
           useCORS: true,
@@ -44,7 +45,9 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
         link.click();
       } catch (error) {
         console.error('Error downloading image:', error);
-      }
+      }finally {
+        setIsDownloading(false);
+        }
     }
   };
 
@@ -206,8 +209,9 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
       <button
         onClick={handleDownload}
         className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium shadow-sm hover:shadow-md"
+        disabled={isDownloading}
       >
-        Download Meme
+        {isDownloading ? 'Downloading...' : 'Download Meme'}
       </button>
     </div>
   );
