@@ -90,6 +90,14 @@ const CustomMeme = () => {
     setEditingText(null);
   };
 
+  const handleUpdateFontSize = (id: string, fontSize: number) => {
+    setTextBoxes(prev =>
+      prev.map((textBox) =>
+        textBox.id === id ? { ...textBox, fontSize } : textBox
+      )
+    );
+  };
+
   return (
     <>
       <MemeGeneratorStructuredData />
@@ -127,6 +135,7 @@ const CustomMeme = () => {
                     onUpdateTextPosition={handleUpdateTextPosition}
                     onTextEdit={handleTextEdit}
                     onTextDelete={handleTextDelete}
+                    onUpdateFontSize={handleUpdateFontSize}
                   />
                 </section>
               )}
