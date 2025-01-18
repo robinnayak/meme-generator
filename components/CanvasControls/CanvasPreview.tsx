@@ -235,7 +235,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     }
   };
 
-  const handleTouchEnd = (e: React.TouchEvent<HTMLCanvasElement>) => {
+  const handleTouchEnd = () => {
     if (longPressTimer) {
       clearTimeout(longPressTimer);
       setLongPressTimer(null);

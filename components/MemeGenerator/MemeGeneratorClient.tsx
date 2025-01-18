@@ -74,6 +74,14 @@ export default function MemeGeneratorClient() {
     setEditingText(null);
   };
 
+  const handleUpdateFontSize = (id: string, fontSize: number) => {
+    setTextBoxes(prev =>
+      prev.map((textBox) =>
+        textBox.id === id ? { ...textBox, fontSize } : textBox
+      )
+    );
+  };
+
   const handleSelectTemplate = (template: Template) => {
     setSelectedImage(template.thumbnail);
     setShouldScroll(true);
@@ -117,6 +125,7 @@ export default function MemeGeneratorClient() {
                   onUpdateTextPosition={handleUpdateTextPosition}
                   onTextEdit={handleTextEdit}
                   onTextDelete={handleTextDelete}
+                  onUpdateFontSize={handleUpdateFontSize}
                 />
               </div>
             </section>
