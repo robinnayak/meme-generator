@@ -108,6 +108,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
         id: clickedText.id,
         offsetX: x - clickedText.x,
         offsetY: y - clickedText.y,
+        lastTap: Date.now()
       };
       setIsDragging(true);
     }
@@ -118,14 +119,16 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     if (!canvas) return;
 
     // Handle pinch gesture initialization
-    if (e.touches.length === 2 && activeTextId) {
-      const distance = calculateTouchDistance(e.touches[0], e.touches[1]);
+    if ((e as React.TouchEvent).touches.length === 2 && activeTextId) {
+      const touch1 = (e as React.TouchEvent).touches[0];
+      const touch2 = (e as React.TouchEvent).touches[1];
+      const distance = calculateTouchDistance(touch1, touch2);
       setInitialTouchDistance(distance);
       return;
     }
 
     const rect = canvas.getBoundingClientRect();
-    const touch = e.touches[0];
+    const touch = (e as React.TouchEvent).touches[0];
     const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
     const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
 
@@ -207,8 +210,10 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     if (!canvas) return;
 
     // Handle pinch-to-zoom for text scaling
-    if (e.touches.length === 2 && activeTextId && initialTouchDistance !== null && initialFontSize !== null) {
-      const currentDistance = calculateTouchDistance(e.touches[0], e.touches[1]);
+    if ((e as React.TouchEvent).touches.length === 2 && activeTextId && initialTouchDistance !== null && initialFontSize !== null) {
+      const touch1 = (e as React.TouchEvent).touches[0];
+      const touch2 = (e as React.TouchEvent).touches[1];
+      const currentDistance = calculateTouchDistance(touch1, touch2);
       const scale = currentDistance / initialTouchDistance;
       const newFontSize = Math.max(8, Math.min(200, Math.round(initialFontSize * scale)));
       onUpdateFontSize(activeTextId, newFontSize);
@@ -218,7 +223,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     // Handle dragging
     if (isDragging && dragRef.current) {
       const rect = canvas.getBoundingClientRect();
-      const touch = e.touches[0];
+      const touch = (e as React.TouchEvent).touches[0];
       const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
       const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
 
@@ -244,7 +249,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     setInitialFontSize(null);
   };
 
-  const calculateTouchDistance = (touch1: Touch, touch2: Touch) => {
+  const calculateTouchDistance = (touch1: React.Touch, touch2: React.Touch) => {
     const dx = touch1.clientX - touch2.clientX;
     const dy = touch1.clientY - touch2.clientY;
     return Math.sqrt(dx * dx + dy * dy);
