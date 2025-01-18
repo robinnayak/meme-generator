@@ -66,6 +66,16 @@ export const DirectAd: React.FC<AdProps> = ({ style }) => (
   </div>
 );
 
+export const handleAdRedirect = () => {
+  const link = document.createElement('a');
+  link.href = 'https://www.profitablecpmrate.com/ewuse2cci?key=d7b0c37e8cea7a7c8a0f878e617d11ea';
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 // For backward compatibility
 const AdBanner: React.FC<{ type: 'native' | 'social' | 'direct' | 'banner'; style?: React.CSSProperties }> = ({ type, style }) => {
   switch (type) {

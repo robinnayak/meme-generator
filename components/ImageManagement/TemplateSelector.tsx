@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
-import { DirectAd, NativeAd } from '../Ads/AdBanner';
+import { DirectAd, NativeAd, handleAdRedirect } from '../Ads/AdBanner';
 import AdCashAd from '../Ads/AdCash';
 
 interface MemeApiResponse {
@@ -28,6 +28,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
     const [templates, setTemplates] = useState<Template[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [adShown, setAdShown] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchMemes = async () => {
@@ -53,6 +54,18 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
 
         fetchMemes();
     }, []);
+
+    const handleTemplateSelect = (template: Template) => {
+        if (adShown === template.id){
+            handleAdRedirect();
+            setAdShown(template.id);
+            return
+        }
+        onSelectTemplate(template);
+        setAdShown(template.id);
+    };
+
+
 
     if (loading) {
         return (
@@ -94,7 +107,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
                     <React.Fragment key={template.id}>
                         <div
                             className="group cursor-pointer bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 hover:border-blue-200"
-                            onClick={() => onSelectTemplate(template)}
+                            onClick={() => handleTemplateSelect(template)}
                         >
                             <div className="relative w-full overflow-hidden rounded-lg bg-gray-50 mb-4" style={{ paddingTop: '75%' }}>
                                 <div className="absolute inset-0 p-2">

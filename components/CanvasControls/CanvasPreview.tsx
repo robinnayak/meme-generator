@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import html2canvas from 'html2canvas';
+import { handleAdRedirect } from '../Ads/AdBanner';
 
 type TextBox = {
   id: string;
@@ -32,6 +33,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dragRef = useRef<{ id: string; offsetX: number; offsetY: number; lastTap: number } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [adShown, setAdShown] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
   const [initialTouchDistance, setInitialTouchDistance] = useState<number | null>(null);
@@ -39,6 +41,12 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
   const [initialFontSize, setInitialFontSize] = useState<number | null>(null);
 
   const handleDownload = async () => {
+    if (!adShown) {
+      handleAdRedirect();
+      setAdShown(true);
+      return;
+    }
+
     if (canvasRef.current) {
       setIsDownloading(true);
       try {
@@ -54,6 +62,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
         console.error('Error downloading image:', error);
       } finally {
         setIsDownloading(false);
+        setAdShown(false);
       }
     }
   };
@@ -317,32 +326,47 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
   }, [imageUrl, textBoxes, drawTextBoxes]);
 
   return (
-    <div className="flex flex-col items-center space-y-4">
-      <div className="relative bg-gray-100 rounded-lg p-4 shadow-inner">
-        <canvas
-          ref={canvasRef}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          onDoubleClick={handleDoubleClick}
-          className="max-w-full border border-gray-200 rounded-lg shadow-sm"
-          style={{
-            cursor: isDragging ? 'grabbing' : 'default',
-            touchAction: 'none'
-          }}
-        />
+    <div className="relative">
+      {/* {showAd && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl">
+            <DirectAd />
+            <button
+              onClick={() => setShowAd(false)}
+              className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Close and Download
+            </button>
+          </div>
+        </div>
+      )} */}
+      <div className="flex flex-col items-center space-y-4">
+        <div className="relative bg-gray-100 rounded-lg p-4 shadow-inner">
+          <canvas
+            ref={canvasRef}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onDoubleClick={handleDoubleClick}
+            className="max-w-full border border-gray-200 rounded-lg shadow-sm"
+            style={{
+              cursor: isDragging ? 'grabbing' : 'default',
+              touchAction: 'none'
+            }}
+          />
+        </div>
+        <button
+          onClick={handleDownload}
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium shadow-sm hover:shadow-md"
+          disabled={isDownloading}
+        >
+          {isDownloading ? 'Downloading...' : 'Download Meme'}
+        </button>
       </div>
-      <button
-        onClick={handleDownload}
-        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium shadow-sm hover:shadow-md"
-        disabled={isDownloading}
-      >
-        {isDownloading ? 'Downloading...' : 'Download Meme'}
-      </button>
     </div>
   );
 };
