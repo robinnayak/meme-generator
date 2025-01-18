@@ -18,6 +18,7 @@ interface CanvasPreviewProps {
   onUpdateTextPosition: (id: string, x: number, y: number) => void;
   onTextEdit: (id: string) => void;
   onTextDelete: (id: string) => void;
+  onUpdateFontSize: (id: string, fontSize: number) => void;
 }
 
 const CanvasPreview: React.FC<CanvasPreviewProps> = ({
@@ -26,18 +27,24 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
   onUpdateTextPosition,
   onTextEdit,
   onTextDelete,
+  onUpdateFontSize,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const dragRef = useRef<{ id: string; offsetX: number; offsetY: number } | null>(null);
+  const dragRef = useRef<{ id: string; offsetX: number; offsetY: number; lastTap: number } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
+  const [initialTouchDistance, setInitialTouchDistance] = useState<number | null>(null);
+  const [activeTextId, setActiveTextId] = useState<string | null>(null);
+  const [initialFontSize, setInitialFontSize] = useState<number | null>(null);
+
   const handleDownload = async () => {
     if (canvasRef.current) {
       setIsDownloading(true);
       try {
-        const canvas = await html2canvas(canvasRef.current, { 
+        const canvas = await html2canvas(canvasRef.current, {
           useCORS: true,
-          backgroundColor: null 
+          backgroundColor: null
         });
         const link = document.createElement('a');
         link.download = 'meme.png';
@@ -45,9 +52,9 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
         link.click();
       } catch (error) {
         console.error('Error downloading image:', error);
-      }finally {
+      } finally {
         setIsDownloading(false);
-        }
+      }
     }
   };
 
@@ -106,6 +113,68 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     }
   };
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // Handle pinch gesture initialization
+    if (e.touches.length === 2 && activeTextId) {
+      const distance = calculateTouchDistance(e.touches[0], e.touches[1]);
+      setInitialTouchDistance(distance);
+      return;
+    }
+
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+    const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
+    const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const clickedText = textBoxes.find((box) => isPointInTextBox(x, y, box, ctx));
+
+    if (clickedText) {
+      setActiveTextId(clickedText.id);
+      setInitialFontSize(clickedText.fontSize);
+
+      const now = Date.now();
+      const lastTap = dragRef.current?.lastTap || 0;
+      const tapTimeout = 300; // 300ms between taps
+
+      if (now - lastTap < tapTimeout) {
+        // Double tap detected
+        onTextEdit(clickedText.id);
+        if (longPressTimer) {
+          clearTimeout(longPressTimer);
+          setLongPressTimer(null);
+        }
+        return;
+      }
+
+      // Handle long press for drag
+      const timer = setTimeout(() => {
+        dragRef.current = {
+          id: clickedText.id,
+          offsetX: touch.clientX - clickedText.x,
+          offsetY: touch.clientY - clickedText.y,
+          lastTap: now,
+        };
+        setIsDragging(true);
+      }, 500); // 500ms for long press
+
+      setLongPressTimer(timer);
+
+      // Update dragRef for double tap detection
+      dragRef.current = {
+        id: clickedText.id,
+        offsetX: touch.clientX - clickedText.x,
+        offsetY: touch.clientY - clickedText.y,
+        lastTap: now,
+      };
+    }
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDragging || !dragRef.current) return;
 
@@ -128,6 +197,59 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     setIsDragging(false);
   };
 
+  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // Handle pinch-to-zoom for text scaling
+    if (e.touches.length === 2 && activeTextId && initialTouchDistance !== null && initialFontSize !== null) {
+      const currentDistance = calculateTouchDistance(e.touches[0], e.touches[1]);
+      const scale = currentDistance / initialTouchDistance;
+      const newFontSize = Math.max(8, Math.min(200, Math.round(initialFontSize * scale)));
+      onUpdateFontSize(activeTextId, newFontSize);
+      return;
+    }
+
+    // Handle dragging
+    if (isDragging && dragRef.current) {
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
+      const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
+
+      onUpdateTextPosition(
+        dragRef.current.id,
+        x - dragRef.current.offsetX,
+        y - dragRef.current.offsetY
+      );
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+
+    // Reset all states
+    dragRef.current = null;
+    setIsDragging(false);
+    setActiveTextId(null);
+    setInitialTouchDistance(null);
+    setInitialFontSize(null);
+  };
+
+  const calculateTouchDistance = (touch1: Touch, touch2: Touch) => {
+    const dx = touch1.clientX - touch2.clientX;
+    const dy = touch1.clientY - touch2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
   const drawTextBoxes = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas || !imageUrl) return;
@@ -144,7 +266,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     img.src = imageUrl;
     img.onload = () => {
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      
+
       // Draw text boxes
       textBoxes.forEach((box) => {
         ctx.font = `${box.italic ? 'italic ' : ''}${box.bold ? 'bold ' : ''}${box.fontSize}px sans-serif`;
@@ -163,7 +285,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
 
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    
+
     img.onload = () => {
       const aspectRatio = img.width / img.height;
       let width = img.width;
@@ -198,6 +320,9 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
           onDoubleClick={handleDoubleClick}
           className="max-w-full border border-gray-200 rounded-lg shadow-sm"
           style={{
